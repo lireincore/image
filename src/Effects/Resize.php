@@ -30,7 +30,7 @@ class Resize implements EffectInterface
 
     /**
      * Resize constructor.
-     * 
+     *
      * @param string $width for example: 100 | 20% (default: auto)
      * @param string $height for example: 100 | 20% (default: auto)
      * @param string $filter
