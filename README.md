@@ -6,7 +6,7 @@
 
 ## About
 
-Image effects, thumbnails and postprocessing. Supports GD, Imagick and Gmagick.
+Supports GD, Imagick and Gmagick.
 
 Also, you can use a special extension [lireincore/imgcache](https://github.com/lireincore/imgcache) that adds the ability to cache thumbs.
 
@@ -21,8 +21,6 @@ $ php composer.phar require lireincore/image
 ```
 
 ## Usage
-
-### Image
 
 ```php
 //Use basic effects

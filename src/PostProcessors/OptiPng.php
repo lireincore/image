@@ -9,8 +9,6 @@ use LireinCore\Image\PostProcessorInterface;
  */
 class OptiPng implements PostProcessorInterface
 {
-    const SUPPORTED_FORMATS = ['png']; //also support convert to 'bmp', 'gif', 'pnm', 'tiff'
-
     /**
      * @var string
      */
@@ -25,6 +23,11 @@ class OptiPng implements PostProcessorInterface
      * @var bool
      */
     protected $_stripAll;
+
+    /**
+     * @var bool
+     */
+    protected $_supportedFormats = ['png']; //todo: also supported convert to 'bmp', 'gif', 'pnm', 'tiff'
 
     /**
      * OptiPng constructor.
@@ -45,7 +48,7 @@ class OptiPng implements PostProcessorInterface
      */
     public function getSupportedFormats()
     {
-        return static::SUPPORTED_FORMATS;
+        return $this->_supportedFormats;
     }
 
     /**

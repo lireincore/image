@@ -9,8 +9,6 @@ use LireinCore\Image\PostProcessorInterface;
  */
 class JpegOptim implements PostProcessorInterface
 {
-    const SUPPORTED_FORMATS = ['jpeg'];
-
     /**
      * @var string
      */
@@ -30,6 +28,11 @@ class JpegOptim implements PostProcessorInterface
      * @var bool
      */
     protected $_progressive;
+
+    /**
+     * @var bool
+     */
+    protected $_supportedFormats = ['jpeg'];
 
     /**
      * JpegOptim constructor.
@@ -52,7 +55,7 @@ class JpegOptim implements PostProcessorInterface
      */
     public function getSupportedFormats()
     {
-        return static::SUPPORTED_FORMATS;
+        return $this->_supportedFormats;
     }
 
     /**

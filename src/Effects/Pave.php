@@ -7,7 +7,7 @@ use LireinCore\Image\TPixel;
 use LireinCore\Image\ImageInterface;
 
 /**
- * Pave image
+ * Pave image //todo: not implemented
  */
 class Pave implements EffectInterface
 {
@@ -54,7 +54,7 @@ class Pave implements EffectInterface
      * @param string $height for example: 100 | 20% (default: auto)
      * @param int    $mode
      */
-    public function __construct($offset_x, $offset_y, $width, $height, $mode = self::MODE_REPEAT_X | self::MODE_REPEAT_Y)
+    public function __construct($offset_x, $offset_y, $width, $height, $mode = 0b00000001)
     {
         $this->_offsetX = $offset_x;
         $this->_offsetY = $offset_y;

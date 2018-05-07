@@ -5,12 +5,10 @@ namespace LireinCore\Image\PostProcessors;
 use LireinCore\Image\PostProcessorInterface;
 
 /**
- * MozJpeg image postprocessor
+ * MozJpeg image postprocessor //todo: not implemented
  */
 class MozJpeg implements PostProcessorInterface
 {
-    const SUPPORTED_FORMATS = ['jpeg'];
-
     /**
      * @var string
      */
@@ -20,6 +18,11 @@ class MozJpeg implements PostProcessorInterface
      * @var int
      */
     protected $_quality;
+
+    /**
+     * @var bool
+     */
+    protected $_supportedFormats = ['jpeg'];
 
     /**
      * MozJpeg constructor.
@@ -38,7 +41,7 @@ class MozJpeg implements PostProcessorInterface
      */
     public function getSupportedFormats()
     {
-        return static::SUPPORTED_FORMATS;
+        return $this->_supportedFormats;
     }
 
     /**

@@ -9,8 +9,6 @@ use LireinCore\Image\PostProcessorInterface;
  */
 class PngQuant implements PostProcessorInterface
 {
-    const SUPPORTED_FORMATS = ['png'];
-
     /**
      * @var string
      */
@@ -20,6 +18,11 @@ class PngQuant implements PostProcessorInterface
      * @var int
      */
     protected $_quality;
+
+    /**
+     * @var bool
+     */
+    protected $_supportedFormats = ['png'];
 
     /**
      * PngQuant constructor.
@@ -38,7 +41,7 @@ class PngQuant implements PostProcessorInterface
      */
     public function getSupportedFormats()
     {
-        return static::SUPPORTED_FORMATS;
+        return $this->_supportedFormats;
     }
 
     /**

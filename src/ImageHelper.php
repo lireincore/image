@@ -162,9 +162,10 @@ class ImageHelper
 
     /**
      * @param string $pathname
+     * @param int $mode
      * @throws \RuntimeException
      */
-    public static function rmkdir($pathname)
+    public static function rmkdir($pathname, $mode = 0775)
     {
         $dirs = array_filter(explode(DIRECTORY_SEPARATOR, $pathname));
         $path = '';
@@ -172,7 +173,7 @@ class ImageHelper
         foreach ($dirs as $dir) {
             $path .= DIRECTORY_SEPARATOR . $dir;
             if (!is_dir($path)) {
-                if (!@mkdir($path, 0755)) {
+                if (!@mkdir($path, $mode)) {
                     throw new \RuntimeException("Failed to make dir '{$path}'");
                 }
             }
