@@ -167,14 +167,22 @@ class ImageHelper
      */
     public static function rmkdir($pathname, $mode = 0775)
     {
-        $dirs = array_filter(explode(DIRECTORY_SEPARATOR, $pathname));
+        $pathname = trim($pathname, '\\/');
+        $dirs = explode(DIRECTORY_SEPARATOR, $pathname);
         $path = '';
+        $umask = umask();
+        $sysMode = $mode & ~$umask;
+        $chmodFlag = $mode === $sysMode ? false : true;
 
         foreach ($dirs as $dir) {
             $path .= DIRECTORY_SEPARATOR . $dir;
             if (!is_dir($path)) {
                 if (!@mkdir($path, $mode)) {
                     throw new \RuntimeException("Failed to make dir '{$path}'");
+                }
+
+                if ($chmodFlag) {
+                    chmod($path, $mode);
                 }
             }
         }
