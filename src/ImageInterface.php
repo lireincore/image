@@ -9,6 +9,10 @@ interface ImageInterface
     const DRIVER_IM = 3; //imagick graphic driver
     const DRIVER_GD = 4; //gd2 graphic driver
 
+    const MIN_REQUIRED_GM_VER = '1.0.0';
+    const MIN_REQUIRED_IM_VER = '6.2.9';
+    const MIN_REQUIRED_GD_VER = '2.0.1';
+
     const FILTER_UNDEFINED = 'undefined';
     const FILTER_POINT = 'point';
     const FILTER_BOX = 'box';
@@ -25,6 +29,8 @@ interface ImageInterface
     const FILTER_LANCZOS = 'lanczos';
     const FILTER_BESSEL = 'bessel';
     const FILTER_SINC = 'sinc';
+
+    const SUPPORTED_DESTINATION_FORMATS = ['jpeg', 'png', 'gif', 'wbmp', 'xbm'];
 
     /**
      * @param int $driver

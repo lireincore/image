@@ -187,4 +187,69 @@ class ImageHelper
             }
         }
     }
+
+    /**
+     * @param string|null $version
+     * @return bool
+     */
+    public static function checkIsGDAvailable($version = null)
+    {
+        if (function_exists('gd_info')) {
+            if ($version !== null) {
+                if (version_compare($version, GD_VERSION) > 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|null $version
+     * @return bool
+     */
+    public static function checkIsImagickAvailable($version = null)
+    {
+        if (class_exists('Imagick')) {
+            if ($version !== null) {
+                $versionData = \Imagick::getVersion();
+                preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $versionData['versionString'], $versionParts);
+                if (version_compare($version, $versionParts[1]) > 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|null $version
+     * @return bool
+     */
+    public static function checkIsGmagickAvailable($version = null)
+    {
+        if (class_exists('Gmagick')) {
+            if ($version !== null) {
+                try {
+                    $versionData = (new \Gmagick())->getVersion();
+                } catch (\GmagickException $ex) {
+                    return false;
+                }
+                preg_match('/GraphicsMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $versionData['versionString'], $versionParts);
+                if (version_compare($version, $versionParts[1]) > 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }
