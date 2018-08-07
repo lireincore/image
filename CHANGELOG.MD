@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### 0.2.0
+### 0.2.0 (2018-08-07)
 
   * Added functions for checking graphic libraries availability
   * Added constants to the image interface
