@@ -2,13 +2,13 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Flip image
  */
-class Flip implements EffectInterface
+class Flip implements Effect
 {
     const MODE_VERTICAL = 'vertical';
     const MODE_HORIZONTAL = 'horizontal';
@@ -17,7 +17,7 @@ class Flip implements EffectInterface
     /**
      * @var string
      */
-    protected $_mode;
+    protected $mode;
 
     /**
      * Flip constructor.
@@ -26,21 +26,21 @@ class Flip implements EffectInterface
      */
     public function __construct($mode)
     {
-        $this->_mode = $mode;
+        $this->mode = $mode;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_mode === static::MODE_VERTICAL) {
-            $img->flipVertically();
-        } elseif ($this->_mode === static::MODE_HORIZONTAL) {
-            $img->flipHorizontally();
-        } elseif ($this->_mode === static::MODE_FULL) {
-            $img->flipHorizontally();
-            $img->flipVertically();
+        if ($this->mode === static::MODE_VERTICAL) {
+            $manipulator->flipVertically();
+        } elseif ($this->mode === static::MODE_HORIZONTAL) {
+            $manipulator->flipHorizontally();
+        } elseif ($this->mode === static::MODE_FULL) {
+            $manipulator->flipHorizontally();
+            $manipulator->flipVertically();
         }
         
         return $this;

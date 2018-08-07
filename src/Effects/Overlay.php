@@ -2,46 +2,46 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Overlay image
  */
-class Overlay implements EffectInterface
+class Overlay implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_path;
+    protected $path;
 
     /**
      * @var int
      */
-    protected $_opacity;
+    protected $opacity;
 
     /**
      * @var string
      */
-    protected $_offsetX;
+    protected $offsetX;
 
     /**
      * @var string
      */
-    protected $_offsetY;
+    protected $offsetY;
 
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * @var string
      */
-    protected $_height;
+    protected $height;
 
     /**
      * Overlay constructor.
@@ -55,43 +55,43 @@ class Overlay implements EffectInterface
      */
     public function __construct($path, $opacity = 100, $offset_x = 'right', $offset_y = 'bottom', $width = null, $height = null)
     {
-        $this->_path = $path;
-        $this->_opacity = $opacity;
-        $this->_offsetX = $offset_x;
-        $this->_offsetY = $offset_y;
-        $this->_width = $width;
-        $this->_height = $height;
+        $this->path = $path;
+        $this->opacity = $opacity;
+        $this->offsetX = $offset_x;
+        $this->offsetY = $offset_y;
+        $this->width = $width;
+        $this->height = $height;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $origWidth = $img->getWidth();
-        $origHeight = $img->getHeight();
+        $origWidth = $manipulator->width();
+        $origHeight = $manipulator->height();
 
-        $watermark = $img::newInstance($img->getDriver(), false)->open($this->_path);
+        $wmManipulator = $manipulator->instance()->open($this->path);
 
-        $wmOrigWidth = $watermark->getWidth();
-        $wmOrigHeight = $watermark->getHeight();
+        $wmOrigWidth = $wmManipulator->width();
+        $wmOrigHeight = $wmManipulator->height();
 
-        $wmWidth = $this->_width === null ? $wmOrigWidth : $this->getPxSize($this->_width, $origWidth);
-        $wmHeight = $this->_height === null ? $wmOrigHeight : $this->getPxSize($this->_height, $origHeight);
+        $wmWidth = $this->width === null ? $wmOrigWidth : $this->pxSize($this->width, $origWidth);
+        $wmHeight = $this->height === null ? $wmOrigHeight : $this->pxSize($this->height, $origHeight);
 
-        $watermark->resize($wmWidth, $wmHeight);
+        $wmManipulator->resize($wmWidth, $wmHeight);
 
         if ($wmWidth > $origWidth || $wmHeight > $origHeight) {
-            $watermark->apply(new ScaleUp($origWidth, $origHeight));
+            $wmManipulator->apply(new ScaleUp($origWidth, $origHeight));
         }
 
-        $wmNewWidth = $watermark->getWidth();
-        $wmNewHeight = $watermark->getHeight();
+        $wmNewWidth = $wmManipulator->width();
+        $wmNewHeight = $wmManipulator->height();
 
-        $offsetX = $this->getWtOffset($this->_offsetX, $origWidth, $wmNewWidth);
-        $offsetY = $this->getWtOffset($this->_offsetY, $origHeight, $wmNewHeight);
+        $offsetX = $this->wtOffset($this->offsetX, $origWidth, $wmNewWidth);
+        $offsetY = $this->wtOffset($this->offsetY, $origHeight, $wmNewHeight);
 
-        $img->paste($watermark, $offsetX, $offsetY, $this->_opacity);
+        $manipulator->paste($wmManipulator, $offsetX, $offsetY, $this->opacity);
 
         return $this;
     }

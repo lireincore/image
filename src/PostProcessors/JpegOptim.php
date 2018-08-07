@@ -2,37 +2,37 @@
 
 namespace LireinCore\Image\PostProcessors;
 
-use LireinCore\Image\PostProcessorInterface;
+use LireinCore\Image\PostProcessor;
 
 /**
  * JpegOptim image postprocessor
  */
-class JpegOptim implements PostProcessorInterface
+class JpegOptim implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $_path;
+    protected $path;
 
     /**
      * @var int
      */
-    protected $_quality;
+    protected $quality;
 
     /**
      * @var bool
      */
-    protected $_stripAll;
+    protected $stripAll;
 
     /**
      * @var bool
      */
-    protected $_progressive;
+    protected $progressive;
 
     /**
      * @var bool
      */
-    protected $_supportedFormats = ['jpeg'];
+    protected $supportedFormats = ['jpeg'];
 
     /**
      * JpegOptim constructor.
@@ -44,18 +44,18 @@ class JpegOptim implements PostProcessorInterface
      */
     public function __construct($path = '/usr/bin/jpegoptim', $quality = 85, $strip_all = true, $progressive = true)
     {
-        $this->_path = $path;
-        $this->_quality = $quality;
-        $this->_stripAll = $strip_all;
-        $this->_progressive = $progressive;
+        $this->path = $path;
+        $this->quality = $quality;
+        $this->stripAll = $strip_all;
+        $this->progressive = $progressive;
     }
 
     /**
      * @inheritdoc
      */
-    public function getSupportedFormats()
+    public function supportedFormats()
     {
-        return $this->_supportedFormats;
+        return $this->supportedFormats;
     }
 
     /**
@@ -63,10 +63,10 @@ class JpegOptim implements PostProcessorInterface
      */
     public function process($path)
     {
-        $stripAll = $this->_stripAll ? ' --strip-all' : '';
-        $progressive = $this->_progressive ? ' --all-progressive' : '';
+        $stripAll = $this->stripAll ? ' --strip-all' : '';
+        $progressive = $this->progressive ? ' --all-progressive' : '';
         $destDir = ' --dest=' . dirname($path);
-        $cmd = "{$this->_path}{$stripAll}{$progressive}{$destDir} -q -p -o -P -m{$this->_quality} {$path}";
+        $cmd = "{$this->path}{$stripAll}{$progressive}{$destDir} -q -p -o -P -m{$this->quality} {$path}";
         $this->exec($cmd);
 
         return $this;

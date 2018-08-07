@@ -2,32 +2,32 @@
 
 namespace LireinCore\Image\PostProcessors;
 
-use LireinCore\Image\PostProcessorInterface;
+use LireinCore\Image\PostProcessor;
 
 /**
  * OptiPng image postprocessor
  */
-class OptiPng implements PostProcessorInterface
+class OptiPng implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $_path;
+    protected $path;
 
     /**
      * @var int
      */
-    protected $_level;
+    protected $level;
 
     /**
      * @var bool
      */
-    protected $_stripAll;
+    protected $stripAll;
 
     /**
      * @var bool
      */
-    protected $_supportedFormats = ['png']; //todo: also supported convert to 'bmp', 'gif', 'pnm', 'tiff'
+    protected $supportedFormats = ['png']; //todo: also supported convert to 'bmp', 'gif', 'pnm', 'tiff'
 
     /**
      * OptiPng constructor.
@@ -38,17 +38,17 @@ class OptiPng implements PostProcessorInterface
      */
     public function __construct($path = '/usr/bin/optipng', $level = 2, $strip_all = true)
     {
-        $this->_path = $path;
-        $this->_level = $level;
-        $this->_stripAll = $strip_all;
+        $this->path = $path;
+        $this->level = $level;
+        $this->stripAll = $strip_all;
     }
 
     /**
      * @inheritdoc
      */
-    public function getSupportedFormats()
+    public function supportedFormats()
     {
-        return $this->_supportedFormats;
+        return $this->supportedFormats;
     }
 
     /**
@@ -56,8 +56,8 @@ class OptiPng implements PostProcessorInterface
      */
     public function process($path)
     {
-        $stripAll = $this->_stripAll ? ' -strip all' : '';
-        $cmd = "{$this->_path}{$stripAll} -clobber -preserve -quiet -o{$this->_level} {$path}";
+        $stripAll = $this->stripAll ? ' -strip all' : '';
+        $cmd = "{$this->path}{$stripAll} -clobber -preserve -quiet -o{$this->level} {$path}";
         $this->exec($cmd);
 
         return $this;

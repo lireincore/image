@@ -2,31 +2,31 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * ScaleDown image
  */
-class ScaleDown implements EffectInterface
+class ScaleDown implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_minWidth;
+    protected $minWidth;
 
     /**
      * @var string
      */
-    protected $_minHeight;
+    protected $minHeight;
 
     /**
      * @var bool
      */
-    protected $_allowDecrease;
+    protected $allowDecrease;
 
     /**
      * ScaleDown constructor.
@@ -37,45 +37,45 @@ class ScaleDown implements EffectInterface
      */
     public function __construct($min_width = null, $min_height = null, $allow_decrease = false)
     {
-        $this->_minWidth = $min_width;
-        $this->_minHeight = $min_height;
-        $this->_allowDecrease = $allow_decrease;
+        $this->minWidth = $min_width;
+        $this->minHeight = $min_height;
+        $this->allowDecrease = $allow_decrease;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_minWidth !== null || $this->_minHeight !== null) {
-            $origWidth = $img->getWidth();
-            $origHeight = $img->getHeight();
+        if ($this->minWidth !== null || $this->minHeight !== null) {
+            $origWidth = $manipulator->width();
+            $origHeight = $manipulator->height();
             $origAspectRatio = $origHeight / $origWidth;
 
-            if ($this->_minWidth === null) {
-                $minHeight = $this->getPxSize($this->_minHeight, $origHeight);
+            if ($this->minWidth === null) {
+                $minHeight = $this->pxSize($this->minHeight, $origHeight);
                 $minWidth = (int)round($minHeight / $origAspectRatio);
-            } elseif ($this->_minHeight === null) {
-                $minWidth = $this->getPxSize($this->_minWidth, $origWidth);
+            } elseif ($this->minHeight === null) {
+                $minWidth = $this->pxSize($this->minWidth, $origWidth);
                 $minHeight = (int)round($minWidth * $origAspectRatio);
             } else {
-                $minWidth = $this->getPxSize($this->_minWidth, $origWidth);
-                $minHeight = $this->getPxSize($this->_minHeight, $origHeight);
+                $minWidth = $this->pxSize($this->minWidth, $origWidth);
+                $minHeight = $this->pxSize($this->minHeight, $origHeight);
             }
 
             $aspectRatio = $minHeight / $minWidth;
 
             if ($aspectRatio < $origAspectRatio) {
-                if ($origHeight < $minHeight || ($origHeight > $minHeight && $this->_allowDecrease)) {
+                if ($origHeight < $minHeight || ($origHeight > $minHeight && $this->allowDecrease)) {
                     $newHeight = $minHeight;
                     $newWidth = (int)round($newHeight / $origAspectRatio);
-                    $img->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
                 }
             } else {
-                if ($origWidth < $minWidth || ($origWidth > $minWidth && $this->_allowDecrease)) {
+                if ($origWidth < $minWidth || ($origWidth > $minWidth && $this->allowDecrease)) {
                     $newWidth = $minWidth;
                     $newHeight = (int)round($newWidth * $origAspectRatio);
-                    $img->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
                 }
             }
         }

@@ -2,27 +2,27 @@
 
 namespace LireinCore\Image\PostProcessors;
 
-use LireinCore\Image\PostProcessorInterface;
+use LireinCore\Image\PostProcessor;
 
 /**
  * PngQuant image postprocessor
  */
-class PngQuant implements PostProcessorInterface
+class PngQuant implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $_path;
+    protected $path;
 
     /**
      * @var int
      */
-    protected $_quality;
+    protected $quality;
 
     /**
      * @var bool
      */
-    protected $_supportedFormats = ['png'];
+    protected $supportedFormats = ['png'];
 
     /**
      * PngQuant constructor.
@@ -32,16 +32,16 @@ class PngQuant implements PostProcessorInterface
      */
     public function __construct($path = '/usr/bin/pngquant', $quality = 85)
     {
-        $this->_path = $path;
-        $this->_quality = $quality;
+        $this->path = $path;
+        $this->quality = $quality;
     }
 
     /**
      * @inheritdoc
      */
-    public function getSupportedFormats()
+    public function supportedFormats()
     {
-        return $this->_supportedFormats;
+        return $this->supportedFormats;
     }
 
     /**
@@ -54,7 +54,7 @@ class PngQuant implements PostProcessorInterface
         //--nofs            disable Floyd-Steinberg dithering
         //--posterize N     output lower resolution color (e.g. for ARGB4444 output)
 
-        $cmd = "{$this->_path} -f --skip-if-larger --quality {$this->_quality} -o {$path} {$path}";
+        $cmd = "{$this->path} -f --skip-if-larger --quality {$this->quality} -o {$path} {$path}";
         $this->exec($cmd);
 
         return $this;

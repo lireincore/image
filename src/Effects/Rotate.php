@@ -2,31 +2,31 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Rotate image
  */
-class Rotate implements EffectInterface
+class Rotate implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var float|int
      */
-    protected $_angle;
+    protected $angle;
 
     /**
      * @var string
      */
-    protected $_bgColor;
+    protected $bgColor;
 
     /**
      * @var int
      */
-    protected $_bgTransparency;
+    protected $bgTransparency;
 
     /**
      * Rotate constructor.
@@ -37,18 +37,18 @@ class Rotate implements EffectInterface
      */
     public function __construct($angle, $bgcolor = '#fff', $bgtransparency = 0)
     {
-        $this->_angle = $angle;
-        $this->_bgColor = $bgcolor;
-        $this->_bgTransparency = $bgtransparency;
+        $this->angle = $angle;
+        $this->bgColor = $bgcolor;
+        $this->bgTransparency = $bgtransparency;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $bgColor = $this->parseColor($this->_bgColor);
-        $img->rotate($this->_angle, $bgColor, $this->_bgTransparency);
+        $bgColor = $this->parseColor($this->bgColor);
+        $manipulator->rotate($this->angle, $bgColor, $this->bgTransparency);
         
         return $this;
     }

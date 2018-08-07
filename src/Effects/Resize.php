@@ -2,31 +2,31 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Resize image
  */
-class Resize implements EffectInterface
+class Resize implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * @var string
      */
-    protected $_height;
+    protected $height;
 
     /**
      * @var string
      */
-    protected $_filter;
+    protected $filter;
 
     /**
      * Resize constructor.
@@ -37,33 +37,33 @@ class Resize implements EffectInterface
      */
     public function __construct($width = null, $height = null, $filter = null)
     {
-        $this->_width = $width;
-        $this->_height = $height;
-        $this->_filter = $filter;
+        $this->width = $width;
+        $this->height = $height;
+        $this->filter = $filter;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_width !== null || $this->_height !== null) {
-            $origWidth = $img->getWidth();
-            $origHeight = $img->getHeight();
+        if ($this->width !== null || $this->height !== null) {
+            $origWidth = $manipulator->width();
+            $origHeight = $manipulator->height();
             $origAspectRatio = $origHeight / $origWidth;
 
-            if ($this->_width === null) {
-                $height = $this->getPxSize($this->_height, $origHeight);
+            if ($this->width === null) {
+                $height = $this->pxSize($this->height, $origHeight);
                 $width = (int)round($height / $origAspectRatio);
-            } elseif ($this->_height === null) {
-                $width = $this->getPxSize($this->_width, $origWidth);
+            } elseif ($this->height === null) {
+                $width = $this->pxSize($this->width, $origWidth);
                 $height = (int)round($width * $origAspectRatio);
             } else {
-                $width = $this->getPxSize($this->_width, $origWidth);
-                $height = $this->getPxSize($this->_height, $origHeight);
+                $width = $this->pxSize($this->width, $origWidth);
+                $height = $this->pxSize($this->height, $origHeight);
             }
 
-            $img->resize($width, $height/*, $this->_filter*/);
+            $manipulator->resize($width, $height/*, $this->filter*/);
         }
 
         return $this;

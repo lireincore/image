@@ -2,12 +2,12 @@
 
 namespace LireinCore\Image;
 
-interface PostProcessorInterface
+interface PostProcessor
 {
     /**
      * @return array
      */
-    public function getSupportedFormats();
+    public function supportedFormats();
 
     /**
      * @param string $path

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+### 0.2.0
+
+  * Added functions for checking graphic libraries availability
+  * Added constants to the image interface
+  * Code refactoring
+  * Changed interfaces
+
 ### 0.1.2 (2018-05-07)
 
   * Fixed rmkdir function, added chmod after mkdir

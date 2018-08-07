@@ -2,14 +2,14 @@
 
 namespace LireinCore\Image;
 
-trait TPixel
+trait Pixel
 {
     /**
      * @param string $value
      * @param int $srcValue
      * @return int
      */
-    protected function getPxSize($value, $srcValue)
+    protected function pxSize($value, $srcValue)
     {
         if (strpos($value, 'px') !== false) {
             $size = str_replace('px', '', $value);
@@ -28,7 +28,7 @@ trait TPixel
      * @param int $size
      * @return int
      */
-    protected function getPxOffset($value, $srcValue, $size)
+    protected function pxOffset($value, $srcValue, $size)
     {
         if ($value == 'center') {
             $offset = ($srcValue - $size) / 2;
@@ -53,9 +53,9 @@ trait TPixel
      * @param int $size
      * @return int
      */
-    protected function getWtOffset($value, $srcValue, $size)
+    protected function wtOffset($value, $srcValue, $size)
     {
-        $offset = $this->getPxOffset($value, $srcValue, $size);
+        $offset = $this->pxOffset($value, $srcValue, $size);
 
         if ($offset + $size > $srcValue) {
             $offset = $srcValue - $size;

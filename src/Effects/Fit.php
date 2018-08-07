@@ -2,51 +2,51 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Fit image in box
  */
-class Fit implements EffectInterface
+class Fit implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_offsetX;
+    protected $offsetX;
 
     /**
      * @var string
      */
-    protected $_offsetY;
+    protected $offsetY;
 
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * @var string
      */
-    protected $_height;
+    protected $height;
 
     /**
      * @var string
      */
-    protected $_bgColor;
+    protected $bgColor;
 
     /**
      * @var int
      */
-    protected $_bgTransparency;
+    protected $bgTransparency;
 
     /**
      * @var bool
      */
-    protected $_allowIncrease;
+    protected $allowIncrease;
 
     /**
      * Fit constructor.
@@ -61,47 +61,47 @@ class Fit implements EffectInterface
      */
     public function __construct($offset_x = 'center', $offset_y = 'center', $width = null, $height = null, $bgcolor = '#fff', $bgtransparency = 0, $allow_increase = false)
     {
-        $this->_offsetX = $offset_x;
-        $this->_offsetY = $offset_y;
-        $this->_width = $width;
-        $this->_height = $height;
-        $this->_bgColor = $bgcolor;
-        $this->_bgTransparency = $bgtransparency;
-        $this->_allowIncrease = $allow_increase;
+        $this->offsetX = $offset_x;
+        $this->offsetY = $offset_y;
+        $this->width = $width;
+        $this->height = $height;
+        $this->bgColor = $bgcolor;
+        $this->bgTransparency = $bgtransparency;
+        $this->allowIncrease = $allow_increase;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_width !== null || $this->_height !== null) {
-            $origWidth = $img->getWidth();
-            $origHeight = $img->getHeight();
+        if ($this->width !== null || $this->height !== null) {
+            $origWidth = $manipulator->width();
+            $origHeight = $manipulator->height();
             $origAspectRatio = $origHeight / $origWidth;
 
-            if ($this->_width === null) {
-                $height = $this->getPxSize($this->_height, $origHeight);
+            if ($this->width === null) {
+                $height = $this->pxSize($this->height, $origHeight);
                 $width = (int)round($height / $origAspectRatio);
-            } elseif ($this->_height === null) {
-                $width = $this->getPxSize($this->_width, $origWidth);
+            } elseif ($this->height === null) {
+                $width = $this->pxSize($this->width, $origWidth);
                 $height = (int)round($width * $origAspectRatio);
             } else {
-                $width = $this->getPxSize($this->_width, $origWidth);
-                $height = $this->getPxSize($this->_height, $origHeight);
+                $width = $this->pxSize($this->width, $origWidth);
+                $height = $this->pxSize($this->height, $origHeight);
             }
 
             if ($origWidth !== $width || $origHeight !== $height) {
-                $img->apply(new ScaleUp($width, $height, $this->_allowIncrease));
-                $newWidth = $img->getWidth();
-                $newHeight = $img->getHeight();
+                $manipulator->apply(new ScaleUp($width, $height, $this->allowIncrease));
+                $newWidth = $manipulator->width();
+                $newHeight = $manipulator->height();
                 if ($newWidth !== $width || $newHeight !== $height) {
-                    $oldImage = $img->copy();
-                    $bgColor = $this->parseColor($this->_bgColor);
-                    $img->create($width, $height, $bgColor, $this->_bgTransparency);
-                    $offsetX = $this->getWtOffset($this->_offsetX, $width, $oldImage->getWidth());
-                    $offsetY = $this->getWtOffset($this->_offsetY, $height, $oldImage->getHeight());
-                    $img->paste($oldImage, $offsetX, $offsetY);
+                    $manipulatorCopy = $manipulator->copy();
+                    $bgColor = $this->parseColor($this->bgColor);
+                    $manipulator->create($width, $height, $bgColor, $this->bgTransparency);
+                    $offsetX = $this->wtOffset($this->offsetX, $width, $manipulatorCopy->width());
+                    $offsetY = $this->wtOffset($this->offsetY, $height, $manipulatorCopy->height());
+                    $manipulator->paste($manipulatorCopy, $offsetX, $offsetY);
                 }
             }
         }

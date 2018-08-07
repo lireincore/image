@@ -2,61 +2,61 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
-use LireinCore\Image\TPixel;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Image text
  */
-class Text implements EffectInterface
+class Text implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_text;
+    protected $text;
 
     /**
      * @var string
      */
-    protected $_font;
+    protected $font;
 
     /**
      * @var string
      */
-    protected $_offsetX;
+    protected $offsetX;
 
     /**
      * @var string
      */
-    protected $_offsetY;
+    protected $offsetY;
 
     /**
      * @var int
      */
-    protected $_size;
+    protected $size;
 
     /**
      * @var string
      */
-    protected $_color;
+    protected $color;
 
     /**
      * @var int
      */
-    protected $_opacity;
+    protected $opacity;
 
     /**
      * @var float|int
      */
-    protected $_angle;
+    protected $angle;
 
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * Text constructor.
@@ -73,30 +73,30 @@ class Text implements EffectInterface
      */
     public function __construct($text, $font = 'Times New Roman', $offset_x = '0', $offset_y = '0', $size = 12, $color = '#fff', $opacity = 100, $angle = 0, $width = null)
     {
-        $this->_text = $text;
-        $this->_font = $font;
-        $this->_offsetX = $offset_x;
-        $this->_offsetY = $offset_y;
-        $this->_size = $size;
-        $this->_color = $color;
-        $this->_opacity = $opacity;
-        $this->_angle = $angle;
-        $this->_width = $width;
+        $this->text = $text;
+        $this->font = $font;
+        $this->offsetX = $offset_x;
+        $this->offsetY = $offset_y;
+        $this->size = $size;
+        $this->color = $color;
+        $this->opacity = $opacity;
+        $this->angle = $angle;
+        $this->width = $width;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $origWidth = $img->getWidth();
-        $origHeight = $img->getHeight();
-        $offsetX = $this->getPxSize($this->_offsetX, $origWidth);
-        $offsetY = $this->getPxSize($this->_offsetY, $origHeight);
-        $color = $this->parseColor($this->_color);
-        $width = $this->_width !== null ? $this->getPxSize($this->_width, $origWidth) : null;
+        $origWidth = $manipulator->width();
+        $origHeight = $manipulator->height();
+        $offsetX = $this->pxSize($this->offsetX, $origWidth);
+        $offsetY = $this->pxSize($this->offsetY, $origHeight);
+        $color = $this->parseColor($this->color);
+        $width = $this->width !== null ? $this->pxSize($this->width, $origWidth) : null;
 
-        $img->text($this->_text, $this->_font, $offsetX, $offsetY, $this->_size, $color, $this->_opacity, $this->_angle, $width);
+        $manipulator->text($this->text, $this->font, $offsetX, $offsetY, $this->size, $color, $this->opacity, $this->angle, $width);
 
         return $this;
     }

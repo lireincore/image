@@ -7,7 +7,7 @@ class ImageHelper
     /**
      * @return array
      */
-    public static function getFormats()
+    public static function formats()
     {
         return [
             'jpeg' => [
@@ -86,12 +86,20 @@ class ImageHelper
     }
 
     /**
+     * @return array
+     */
+    public static function supportedDestinationFormats()
+    {
+        return ['jpeg', 'png', 'gif', 'wbmp', 'xbm'];
+    }
+
+    /**
      * @param string $mime
      * @return null|string
      */
-    public static function getFormatByMime($mime)
+    public static function formatByMime($mime)
     {
-        $formats = static::getFormats();
+        $formats = static::formats();
 
         foreach ($formats as $name => $format) {
             if (in_array($mime, $format['mime'])) {
@@ -106,9 +114,9 @@ class ImageHelper
      * @param string $ext
      * @return null|string
      */
-    public static function getFormatByExt($ext)
+    public static function formatByExt($ext)
     {
-        $formats = static::getFormats();
+        $formats = static::formats();
 
         foreach ($formats as $name => $format) {
             if (in_array($ext, $format['ext'])) {
@@ -123,9 +131,9 @@ class ImageHelper
      * @param string $format
      * @return null|string
      */
-    public static function getExtByFormat($format)
+    public static function extensionByFormat($format)
     {
-        $formats = static::getFormats();
+        $formats = static::formats();
 
         if (isset($formats[$format])) {
             return $formats[$format]['ext'][0];
@@ -135,18 +143,18 @@ class ImageHelper
     }
 
     /**
-     * @param string $pathname
+     * @param string $path
      * @return bool
      */
-    public static function rrmdir($pathname)
+    public static function rrmdir($path)
     {
-        if (($dir = @opendir($pathname)) === false) {
+        if (($dir = @opendir($path)) === false) {
             return false;
         }
 
         while (($file = readdir($dir)) !== false) {
             if (($file != '.') && ($file != '..')) {
-                $full = $pathname . DIRECTORY_SEPARATOR . $file;
+                $full = $path . DIRECTORY_SEPARATOR . $file;
                 if (is_dir($full)) {
                     static::rrmdir($full);
                 } else {
@@ -157,32 +165,32 @@ class ImageHelper
 
         closedir($dir);
 
-        return @rmdir($pathname);
+        return @rmdir($path);
     }
 
     /**
-     * @param string $pathname
+     * @param string $path
      * @param int $mode
      * @throws \RuntimeException
      */
-    public static function rmkdir($pathname, $mode = 0775)
+    public static function rmkdir($path, $mode = 0775)
     {
-        $pathname = trim($pathname, '\\/');
-        $dirs = explode(DIRECTORY_SEPARATOR, $pathname);
-        $path = '';
+        $path = trim($path, '\\/');
+        $dirs = explode(DIRECTORY_SEPARATOR, $path);
+        $pathPart = '';
         $umask = umask();
         $sysMode = $mode & ~$umask;
         $chmodFlag = $mode === $sysMode ? false : true;
 
         foreach ($dirs as $dir) {
-            $path .= DIRECTORY_SEPARATOR . $dir;
-            if (!is_dir($path)) {
-                if (!@mkdir($path, $mode)) {
-                    throw new \RuntimeException("Failed to make dir '{$path}'");
+            $pathPart .= DIRECTORY_SEPARATOR . $dir;
+            if (!is_dir($pathPart)) {
+                if (!@mkdir($pathPart, $mode)) {
+                    throw new \RuntimeException("Failed to make dir '{$pathPart}'");
                 }
 
                 if ($chmodFlag) {
-                    chmod($path, $mode);
+                    chmod($pathPart, $mode);
                 }
             }
         }
@@ -192,7 +200,7 @@ class ImageHelper
      * @param string|null $version
      * @return bool
      */
-    public static function checkIsGDAvailable($version = null)
+    public static function isGDAvailable($version = null)
     {
         if (function_exists('gd_info')) {
             if ($version !== null) {
@@ -211,7 +219,7 @@ class ImageHelper
      * @param string|null $version
      * @return bool
      */
-    public static function checkIsImagickAvailable($version = null)
+    public static function isImagickAvailable($version = null)
     {
         if (class_exists('Imagick')) {
             if ($version !== null) {
@@ -232,7 +240,7 @@ class ImageHelper
      * @param string|null $version
      * @return bool
      */
-    public static function checkIsGmagickAvailable($version = null)
+    public static function isGmagickAvailable($version = null)
     {
         if (class_exists('Gmagick')) {
             if ($version !== null) {

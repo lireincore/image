@@ -2,23 +2,23 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Scale image
  */
-class Scale implements EffectInterface
+class Scale implements Effect
 {
     /**
      * @var string
      */
-    protected $_ratio;
+    protected $ratio;
 
     /**
      * @var string
      */
-    protected $_filter;
+    protected $filter;
 
     /**
      * Scale constructor.
@@ -28,17 +28,17 @@ class Scale implements EffectInterface
      */
     public function __construct($ratio, $filter = null)
     {
-        $this->_ratio = $ratio;
-        $this->_filter = $filter;
+        $this->ratio = $ratio;
+        $this->filter = $filter;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $ratio = $this->getRatio($this->_ratio);
-        $img->scale($ratio/*, $this->_filter*/);
+        $ratio = $this->getRatio($this->ratio);
+        $manipulator->scale($ratio/*, $this->filter*/);
 
         return $this;
     }

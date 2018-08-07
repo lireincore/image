@@ -2,18 +2,18 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Image gaussian blur
  */
-class Blur implements EffectInterface
+class Blur implements Effect
 {
     /**
      * @var float
      */
-    protected $_sigma;
+    protected $sigma;
 
     /**
      * Blur constructor.
@@ -22,15 +22,15 @@ class Blur implements EffectInterface
      */
     public function __construct($sigma)
     {
-        $this->_sigma = $sigma;
+        $this->sigma = $sigma;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $img->blur($this->_sigma);
+        $manipulator->blur($this->sigma);
 
         return $this;
     }

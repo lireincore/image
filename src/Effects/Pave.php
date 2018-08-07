@@ -2,16 +2,16 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Pave image //todo: not implemented
  */
-class Pave implements EffectInterface
+class Pave implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     const MODE_REPEAT_X = 0b00000001;
     const MODE_REPEAT_Y = 0b00000010;
@@ -23,27 +23,27 @@ class Pave implements EffectInterface
     /**
      * @var string
      */
-    protected $_offsetX;
+    protected $offsetX;
 
     /**
      * @var string
      */
-    protected $_offsetY;
+    protected $offsetY;
 
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * @var string
      */
-    protected $_height;
+    protected $height;
 
     /**
      * @var int
      */
-    protected $_mode;
+    protected $mode;
 
     /**
      * Pave constructor.
@@ -56,24 +56,24 @@ class Pave implements EffectInterface
      */
     public function __construct($offset_x, $offset_y, $width, $height, $mode = 0b00000001)
     {
-        $this->_offsetX = $offset_x;
-        $this->_offsetY = $offset_y;
-        $this->_width = $width;
-        $this->_height = $height;
-        $this->_mode = $mode;
+        $this->offsetX = $offset_x;
+        $this->offsetY = $offset_y;
+        $this->width = $width;
+        $this->height = $height;
+        $this->mode = $mode;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $origWidth = $img->getWidth();
-        $origHeight = $img->getHeight();
-        $width = $this->getPxSize($this->_width, $origWidth);
-        $height = $this->getPxSize($this->_height, $origHeight);
-        $offsetX = $this->getPxOffset($this->_offsetX, $img->getWidth(), $width);
-        $offsetY = $this->getPxOffset($this->_offsetY, $img->getHeight(), $height);
+        $origWidth = $manipulator->width();
+        $origHeight = $manipulator->height();
+        $width = $this->pxSize($this->width, $origWidth);
+        $height = $this->pxSize($this->height, $origHeight);
+        $offsetX = $this->pxOffset($this->offsetX, $manipulator->width(), $width);
+        $offsetY = $this->pxOffset($this->offsetY, $manipulator->height(), $height);
 
         //todo
 

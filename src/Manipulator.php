@@ -2,12 +2,12 @@
 
 namespace LireinCore\Image;
 
-interface ImageInterface
+interface Manipulator
 {
     const DRIVER_DEFAULT = 1; //default graphic driver
     const DRIVER_GM = 2; //gmagick graphic driver
     const DRIVER_IM = 3; //imagick graphic driver
-    const DRIVER_GD = 4; //gd2 graphic driver
+    const DRIVER_GD = 4; //gd graphic driver
 
     const MIN_REQUIRED_GM_VER = '1.0.0';
     const MIN_REQUIRED_IM_VER = '6.2.9';
@@ -30,37 +30,18 @@ interface ImageInterface
     const FILTER_BESSEL = 'bessel';
     const FILTER_SINC = 'sinc';
 
-    const SUPPORTED_DESTINATION_FORMATS = ['jpeg', 'png', 'gif', 'wbmp', 'xbm'];
-
     /**
      * @param int $driver
      * @param bool $tryToUseOtherDrivers
      * @throws \RuntimeException
      */
-    public function __construct($driver = ImageInterface::DRIVER_DEFAULT, $tryToUseOtherDrivers = true);
+    public function __construct($driver = self::DRIVER_DEFAULT, $tryToUseOtherDrivers = true);
 
     /**
-     * @param int $driver
-     * @param bool $tryToUseOtherDrivers
-     * @return ImageInterface
+     * @return Manipulator
      * @throws \RuntimeException
      */
-    public static function newInstance($driver = ImageInterface::DRIVER_DEFAULT, $tryToUseOtherDrivers = true);
-
-    /**
-     * @return int
-     */
-    public function getDriver();
-
-    /**
-     * @return int
-     */
-    public function getWidth();
-
-    /**
-     * @return int
-     */
-    public function getHeight();
+    public function instance();
 
     /**
      * @param $filepath
@@ -75,36 +56,55 @@ interface ImageInterface
      * @param string $color
      * @param int $transparency
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function create($width, $height, $color = '#fff', $transparency = 0);
 
     /**
-     * @return ImageInterface
+     * @param string $destPath
+     * @param array $options
+     * @return $this
+     * @throws \RuntimeException
+     */
+    public function save($destPath, $options = []);
+
+    /**
+     * @return Manipulator
+     * @throws \RuntimeException
      */
     public function copy();
 
     /**
-     * @param EffectInterface $effect
+     * @param Effect $effect
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \OutOfBoundsException
+     * @throws \RuntimeException
      */
-    public function apply(EffectInterface $effect);
+    public function apply(Effect $effect);
 
     /**
-     * @param ImageInterface $img
+     * @param Manipulator $manipulator
      * @param int $offsetX
      * @param int $offsetY
      * @param int $opacity
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \OutOfBoundsException
+     * @throws \RuntimeException
      */
-    public function paste(ImageInterface $img, $offsetX, $offsetY, $opacity = 100);
+    public function paste(Manipulator $manipulator, $offsetX, $offsetY, $opacity = 100);
 
     /**
      * @param int $width
      * @param int $height
      * @param string $filter
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
-    public function resize($width, $height, $filter = ImageInterface::FILTER_UNDEFINED);
+    public function resize($width, $height, $filter = self::FILTER_UNDEFINED);
 
     /**
      * @param int $offsetX
@@ -112,6 +112,9 @@ interface ImageInterface
      * @param int $width
      * @param int $height
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \OutOfBoundsException
+     * @throws \RuntimeException
      */
     public function crop($offsetX, $offsetY, $width, $height);
 
@@ -119,16 +122,20 @@ interface ImageInterface
      * @param float $ratio
      * @param string $filter
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
-    public function scale($ratio, $filter = ImageInterface::FILTER_UNDEFINED);
+    public function scale($ratio, $filter = self::FILTER_UNDEFINED);
 
     /**
      * @return $this
+     * @throws \RuntimeException
      */
     public function flipHorizontally();
 
     /**
      * @return $this
+     * @throws \RuntimeException
      */
     public function flipVertically();
 
@@ -137,28 +144,34 @@ interface ImageInterface
      * @param string $bgcolor
      * @param int $bgtransparency
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function rotate($angle, $bgcolor = '#fff', $bgtransparency = 0);
 
     /**
      * @return $this
+     * @throws \RuntimeException
      */
     public function negative();
 
     /**
      * @return $this
+     * @throws \RuntimeException
      */
     public function grayscale();
 
     /**
      * @param float $correction
      * @return $this
+     * @throws \RuntimeException
      */
     public function gamma($correction);
 
     /**
      * @param float $sigma
      * @return $this
+     * @throws \RuntimeException
      */
     public function blur($sigma);
 
@@ -173,14 +186,23 @@ interface ImageInterface
      * @param float|int $angle
      * @param null|int $width
      * @return $this
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function text($text, $font = 'Times New Roman', $offsetX = 0, $offsetY = 0, $size = 12, $color = '#fff', $opacity = 100, $angle = 0, $width = null);
 
     /**
-     * @param string $destPath
-     * @param array $options
-     * @return $this
-     * @throws \RuntimeException
+     * @return int
      */
-    public function save($destPath, $options = []);
+    public function driver();
+
+    /**
+     * @return int
+     */
+    public function width();
+
+    /**
+     * @return int
+     */
+    public function height();
 }

@@ -2,27 +2,27 @@
 
 namespace LireinCore\Image\PostProcessors;
 
-use LireinCore\Image\PostProcessorInterface;
+use LireinCore\Image\PostProcessor;
 
 /**
  * MozJpeg image postprocessor //todo: not implemented
  */
-class MozJpeg implements PostProcessorInterface
+class MozJpeg implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $_path; //cjpeg //jpegtran
+    protected $path; //cjpeg //jpegtran
 
     /**
      * @var int
      */
-    protected $_quality;
+    protected $quality;
 
     /**
      * @var bool
      */
-    protected $_supportedFormats = ['jpeg'];
+    protected $supportedFormats = ['jpeg'];
 
     /**
      * MozJpeg constructor.
@@ -32,16 +32,16 @@ class MozJpeg implements PostProcessorInterface
      */
     public function __construct($path = '/opt/mozjpeg/bin/cjpeg', $quality = 70)
     {
-        $this->_path = $path;
-        $this->_quality = $quality;
+        $this->path = $path;
+        $this->quality = $quality;
     }
 
     /**
      * @inheritdoc
      */
-    public function getSupportedFormats()
+    public function supportedFormats()
     {
-        return $this->_supportedFormats;
+        return $this->supportedFormats;
     }
 
     /**

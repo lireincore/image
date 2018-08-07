@@ -2,31 +2,31 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * ScaleUp image
  */
-class ScaleUp implements EffectInterface
+class ScaleUp implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_maxWidth;
+    protected $maxWidth;
 
     /**
      * @var string
      */
-    protected $_maxHeight;
+    protected $maxHeight;
 
     /**
      * @var bool
      */
-    protected $_allowIncrease;
+    protected $allowIncrease;
 
     /**
      * ScaleUp constructor.
@@ -37,45 +37,45 @@ class ScaleUp implements EffectInterface
      */
     public function __construct($max_width = null, $max_height = null, $allow_increase = false)
     {
-        $this->_maxWidth = $max_width;
-        $this->_maxHeight = $max_height;
-        $this->_allowIncrease = $allow_increase;
+        $this->maxWidth = $max_width;
+        $this->maxHeight = $max_height;
+        $this->allowIncrease = $allow_increase;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_maxWidth !== null || $this->_maxHeight !== null) {
-            $origWidth = $img->getWidth();
-            $origHeight = $img->getHeight();
+        if ($this->maxWidth !== null || $this->maxHeight !== null) {
+            $origWidth = $manipulator->width();
+            $origHeight = $manipulator->height();
             $origAspectRatio = $origHeight / $origWidth;
 
-            if ($this->_maxWidth === null) {
-                $maxHeight = $this->getPxSize($this->_maxHeight, $origHeight);
+            if ($this->maxWidth === null) {
+                $maxHeight = $this->pxSize($this->maxHeight, $origHeight);
                 $maxWidth = (int)round($maxHeight / $origAspectRatio);
-            } elseif ($this->_maxHeight === null) {
-                $maxWidth = $this->getPxSize($this->_maxWidth, $origWidth);
+            } elseif ($this->maxHeight === null) {
+                $maxWidth = $this->pxSize($this->maxWidth, $origWidth);
                 $maxHeight = (int)round($maxWidth * $origAspectRatio);
             } else {
-                $maxWidth = $this->getPxSize($this->_maxWidth, $origWidth);
-                $maxHeight = $this->getPxSize($this->_maxHeight, $origHeight);
+                $maxWidth = $this->pxSize($this->maxWidth, $origWidth);
+                $maxHeight = $this->pxSize($this->maxHeight, $origHeight);
             }
 
             $aspectRatio = $maxHeight / $maxWidth;
 
             if ($aspectRatio < $origAspectRatio) {
-                if ($origHeight > $maxHeight || ($origHeight < $maxHeight && $this->_allowIncrease)) {
+                if ($origHeight > $maxHeight || ($origHeight < $maxHeight && $this->allowIncrease)) {
                     $newHeight = $maxHeight;
                     $newWidth = (int)round($newHeight / $origAspectRatio);
-                    $img->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
                 }
             } else {
-                if ($origWidth > $maxWidth || ($origWidth < $maxWidth && $this->_allowIncrease)) {
+                if ($origWidth > $maxWidth || ($origWidth < $maxWidth && $this->allowIncrease)) {
                     $newWidth = $maxWidth;
                     $newHeight = (int)round($newWidth * $origAspectRatio);
-                    $img->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
                 }
             }
         }

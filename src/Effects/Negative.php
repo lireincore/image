@@ -2,20 +2,20 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Image negative
  */
-class Negative implements EffectInterface
+class Negative implements Effect
 {
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $img->negative();
+        $manipulator->negative();
         
         return $this;
     }

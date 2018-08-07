@@ -2,36 +2,36 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Crop image
  */
-class Crop implements EffectInterface
+class Crop implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     /**
      * @var string
      */
-    protected $_offsetX;
+    protected $offsetX;
 
     /**
      * @var string
      */
-    protected $_offsetY;
+    protected $offsetY;
 
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * @var string
      */
-    protected $_height;
+    protected $height;
 
     /**
      * Crop constructor.
@@ -43,37 +43,37 @@ class Crop implements EffectInterface
      */
     public function __construct($offset_x = 'left', $offset_y = 'top', $width = null, $height = null)
     {
-        $this->_offsetX = $offset_x;
-        $this->_offsetY = $offset_y;
-        $this->_width = $width;
-        $this->_height = $height;
+        $this->offsetX = $offset_x;
+        $this->offsetY = $offset_y;
+        $this->width = $width;
+        $this->height = $height;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_width !== null || $this->_height !== null) {
-            $origWidth = $img->getWidth();
-            $origHeight = $img->getHeight();
+        if ($this->width !== null || $this->height !== null) {
+            $origWidth = $manipulator->width();
+            $origHeight = $manipulator->height();
             $origAspectRatio = $origHeight / $origWidth;
 
-            if ($this->_width === null) {
-                $height = $this->getPxSize($this->_height, $origHeight);
+            if ($this->width === null) {
+                $height = $this->pxSize($this->height, $origHeight);
                 $width = (int)round($height / $origAspectRatio);
-            } elseif ($this->_height === null) {
-                $width = $this->getPxSize($this->_width, $origWidth);
+            } elseif ($this->height === null) {
+                $width = $this->pxSize($this->width, $origWidth);
                 $height = (int)round($width * $origAspectRatio);
             } else {
-                $width = $this->getPxSize($this->_width, $origWidth);
-                $height = $this->getPxSize($this->_height, $origHeight);
+                $width = $this->pxSize($this->width, $origWidth);
+                $height = $this->pxSize($this->height, $origHeight);
             }
 
-            $offsetX = $this->getPxOffset($this->_offsetX, $origWidth, $width);
-            $offsetY = $this->getPxOffset($this->_offsetY, $origHeight, $height);
+            $offsetX = $this->pxOffset($this->offsetX, $origWidth, $width);
+            $offsetY = $this->pxOffset($this->offsetY, $origHeight, $height);
 
-            $img->crop($offsetX, $offsetY, $width, $height);
+            $manipulator->crop($offsetX, $offsetY, $width, $height);
         }
 
         return $this;

@@ -2,18 +2,18 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Image gamma correction
  */
-class Gamma implements EffectInterface
+class Gamma implements Effect
 {
     /**
      * @var float
      */
-    protected $_correction;
+    protected $correction;
 
     /**
      * Gamma constructor.
@@ -22,15 +22,15 @@ class Gamma implements EffectInterface
      */
     public function __construct($correction)
     {
-        $this->_correction = $correction;
+        $this->correction = $correction;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $img->gamma($this->_correction);
+        $manipulator->gamma($this->correction);
 
         return $this;
     }

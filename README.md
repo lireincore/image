@@ -12,7 +12,7 @@ Also, you can use a special extension [lireincore/imgcache](https://github.com/l
 
 ## Install
 
-Add the `"lireincore/image": "~0.1.0"` package to your `require` section in the `composer.json` file
+Add the `"lireincore/image": "~0.2.0"` package to your `require` section in the `composer.json` file
 
 or
 
@@ -24,10 +24,10 @@ $ php composer.phar require lireincore/image
 
 ```php
 //Use basic effects
-use LireinCore\Image\Image;
+use LireinCore\Image\Manipulators\Imagine;
 use LireinCore\Image\PostProcessors\OptiPng;
 
-$image = (new Image())
+$image = (new Imagine())
     ->open('/path/to/image.jpg')
     ->resize(1000, 500)
     ->grayscale()
@@ -39,13 +39,14 @@ $postProcessor = new OptiPng();
 $postProcessor->process('/path/to/new_image.png'); //optimize image
 
 //Also you can add extended effects
-use LireinCore\Image\Image;
+use LireinCore\Image\Manipulator;
+use LireinCore\Image\Manipulators\Imagine;
 use LireinCore\Image\Effects\Overlay;
 use LireinCore\Image\Effects\ScaleDown;
 use LireinCore\Image\Effects\Fit;
 use LireinCore\Image\PostProcessors\JpegOptim;
 
-$image = (new Image(ImageInterface::DRIVER_GD))
+$image = (new Imagine(Manipulator::DRIVER_GD))
     ->open('/path/to/image.jpg')
     ->apply(new Overlay('/path/to/watermark.png', 70, 'right', 'bottom', '50%', '50%'))
     ->grayscale()

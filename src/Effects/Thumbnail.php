@@ -2,16 +2,16 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\TPixel;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Pixel;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Image thumbnail
  */
-class Thumbnail implements EffectInterface
+class Thumbnail implements Effect
 {
-    use TPixel;
+    use Pixel;
 
     const MODE_INSET = 'inset';
     const MODE_OUTBOUND = 'outbound';
@@ -19,27 +19,27 @@ class Thumbnail implements EffectInterface
     /**
      * @var string
      */
-    protected $_width;
+    protected $width;
 
     /**
      * @var string
      */
-    protected $_height;
+    protected $height;
 
     /**
      * @var string
      */
-    protected $_mode;
+    protected $mode;
 
     /**
      * @var string
      */
-    protected $_bgColor;
+    protected $bgColor;
 
     /**
      * @var int
      */
-    protected $_bgTransparency;
+    protected $bgTransparency;
 
     /**
      * Thumbnail constructor.
@@ -52,22 +52,22 @@ class Thumbnail implements EffectInterface
      */
     public function __construct($width = null, $height = null, $mode = self::MODE_INSET, $bgcolor = '#fff', $bgtransparency = 0)
     {
-        $this->_width = $width;
-        $this->_height = $height;
-        $this->_mode = $mode;
-        $this->_bgColor = $bgcolor;
-        $this->_bgTransparency = $bgtransparency;
+        $this->width = $width;
+        $this->height = $height;
+        $this->mode = $mode;
+        $this->bgColor = $bgcolor;
+        $this->bgTransparency = $bgtransparency;
     }
 
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        if ($this->_mode === static::MODE_INSET) {
-            $img->apply(new ScaleUp($this->_width, $this->_height));
-        } elseif ($this->_mode === static::MODE_OUTBOUND) {
-            $img->apply(new Cover('center', 'center', $this->_width, $this->_height));
+        if ($this->mode === static::MODE_INSET) {
+            $manipulator->apply(new ScaleUp($this->width, $this->height));
+        } elseif ($this->mode === static::MODE_OUTBOUND) {
+            $manipulator->apply(new Cover('center', 'center', $this->width, $this->height));
         }
 
         return $this;

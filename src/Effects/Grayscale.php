@@ -2,20 +2,20 @@
 
 namespace LireinCore\Image\Effects;
 
-use LireinCore\Image\EffectInterface;
-use LireinCore\Image\ImageInterface;
+use LireinCore\Image\Effect;
+use LireinCore\Image\Manipulator;
 
 /**
  * Image grayscale
  */
-class Grayscale implements EffectInterface
+class Grayscale implements Effect
 {
     /**
      * @inheritdoc
      */
-    public function apply(ImageInterface $img)
+    public function apply(Manipulator $manipulator)
     {
-        $img->grayscale();
+        $manipulator->grayscale();
 
         return $this;
     }
