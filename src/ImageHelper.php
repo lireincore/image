@@ -88,6 +88,14 @@ class ImageHelper
     /**
      * @return array
      */
+    public static function supportedDrivers()
+    {
+        return ['gd', 'imagick', 'gmagick'];
+    }
+
+    /**
+     * @return array
+     */
     public static function supportedDestinationFormats()
     {
         return ['jpeg', 'png', 'gif', 'wbmp', 'xbm'];
