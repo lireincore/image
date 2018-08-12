@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 0.2.1 (2018-08-12)
+
+  * Added helper function supportedDrivers()
+
 ### 0.2.0 (2018-08-07)
 
   * Added functions for checking graphic libraries availability

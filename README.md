@@ -12,7 +12,7 @@ Also, you can use a special extension [lireincore/imgcache](https://github.com/l
 
 ## Install
 
-Add the `"lireincore/image": "~0.2.0"` package to your `require` section in the `composer.json` file
+Add the `"lireincore/image": "^0.2.1"` package to your `require` section in the `composer.json` file
 
 or
 
