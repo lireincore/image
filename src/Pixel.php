@@ -9,7 +9,7 @@ trait Pixel
      * @param int $srcValue
      * @return int
      */
-    protected function pxSize($value, $srcValue)
+    private function pxSize(string $value, int $srcValue) : int
     {
         if (strpos($value, 'px') !== false) {
             $size = str_replace('px', '', $value);
@@ -28,13 +28,13 @@ trait Pixel
      * @param int $size
      * @return int
      */
-    protected function pxOffset($value, $srcValue, $size)
+    private function pxOffset(string $value, int $srcValue, int $size) : int
     {
-        if ($value == 'center') {
+        if ($value === 'center') {
             $offset = ($srcValue - $size) / 2;
-        } elseif ($value == 'left' || $value == 'top') {
+        } elseif ($value === 'left' || $value === 'top') {
             $offset = 0;
-        } elseif ($value == 'right' || $value == 'bottom') {
+        } elseif ($value === 'right' || $value === 'bottom') {
             $offset = $srcValue - $size;
         } elseif (strpos($value, 'px') !== false) {
             $offset = str_replace('px', '', $value);
@@ -53,7 +53,7 @@ trait Pixel
      * @param int $size
      * @return int
      */
-    protected function wtOffset($value, $srcValue, $size)
+    private function wtOffset(string $value, int $srcValue, int $size) : int
     {
         $offset = $this->pxOffset($value, $srcValue, $size);
 
@@ -68,18 +68,18 @@ trait Pixel
      * @param string $color
      * @return string|array
      */
-    protected function parseColor($color)
+    private function parseColor(string $color)
     {
         if (false === strpos('#', $color)) {
             $arr = explode(',', $color);
             $count = count($arr);
-            if ($count == 3 || $count == 4) {
+            if ($count === 3 || $count === 4) {
                 $result = [
                     0 => trim($arr[0]),
                     1 => trim($arr[1]),
                     2 => trim($arr[2])
                 ];
-                if ($count == 4) {
+                if ($count === 4) {
                     $result[3] = trim($arr[3]);
                 }
 

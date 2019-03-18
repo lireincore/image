@@ -8,12 +8,12 @@ use LireinCore\Image\Manipulator;
 /**
  * Image gamma correction
  */
-class Gamma implements Effect
+final class Gamma implements Effect
 {
     /**
      * @var float
      */
-    protected $correction;
+    private $correction;
 
     /**
      * Gamma constructor.
@@ -28,7 +28,7 @@ class Gamma implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $manipulator->gamma($this->correction);
 

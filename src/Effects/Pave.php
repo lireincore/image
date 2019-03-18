@@ -7,54 +7,54 @@ use LireinCore\Image\Effect;
 use LireinCore\Image\Manipulator;
 
 /**
- * Pave image //todo: not implemented
+ * Pave image
  */
-class Pave implements Effect
+final class Pave implements Effect
 {
     use Pixel;
 
-    const MODE_REPEAT_X = 0b00000001;
-    const MODE_REPEAT_Y = 0b00000010;
-    const MODE_SPACE_X = 0b00000100;
-    const MODE_SPACE_Y = 0b00001000;
-    const MODE_ROUND_X = 0b00010000;
-    const MODE_ROUND_Y = 0b00100000;
+    public const MODE_REPEAT_X = 0b00000001;
+    public const MODE_REPEAT_Y = 0b00000010;
+    public const MODE_SPACE_X = 0b00000100;
+    public const MODE_SPACE_Y = 0b00001000;
+    public const MODE_ROUND_X = 0b00010000;
+    public const MODE_ROUND_Y = 0b00100000;
 
     /**
      * @var string
      */
-    protected $offsetX;
+    private $offsetX;
 
     /**
      * @var string
      */
-    protected $offsetY;
+    private $offsetY;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $width;
+    private $width;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $height;
+    private $height;
 
     /**
      * @var int
      */
-    protected $mode;
+    private $mode;
 
     /**
      * Pave constructor.
      *
-     * @param string $offset_x for example: 100 | 20% | center | left | right (default: left)
-     * @param string $offset_y for example: 100 | 20% | center | top | bottom (default: top)
-     * @param string $width for example: 100 | 20% (default: auto)
-     * @param string $height for example: 100 | 20% (default: auto)
-     * @param int    $mode
+     * @param string      $offset_x for example: 100 | 20% | center | left | right (default: left)
+     * @param string      $offset_y for example: 100 | 20% | center | top | bottom (default: top)
+     * @param string|null $width for example: 100 | 20% (default: auto)
+     * @param string|null $height for example: 100 | 20% (default: auto)
+     * @param int         $mode
      */
-    public function __construct($offset_x, $offset_y, $width, $height, $mode = 0b00000001)
+    public function __construct($offset_x = 'left', $offset_y = 'top', $width = null, $height = null, $mode = 0b00000001)
     {
         $this->offsetX = $offset_x;
         $this->offsetY = $offset_y;
@@ -66,7 +66,7 @@ class Pave implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $origWidth = $manipulator->width();
         $origHeight = $manipulator->height();
@@ -75,7 +75,7 @@ class Pave implements Effect
         $offsetX = $this->pxOffset($this->offsetX, $manipulator->width(), $width);
         $offsetY = $this->pxOffset($this->offsetY, $manipulator->height(), $height);
 
-        //todo
+        //todo: not implemented
 
         return $this;
     }

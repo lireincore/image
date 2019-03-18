@@ -9,37 +9,37 @@ use LireinCore\Image\Manipulator;
 /**
  * Cover image
  */
-class Cover implements Effect
+final class Cover implements Effect
 {
     use Pixel;
 
     /**
      * @var string
      */
-    protected $offsetX;
+    private $offsetX;
 
     /**
      * @var string
      */
-    protected $offsetY;
+    private $offsetY;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $width;
+    private $width;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $height;
+    private $height;
 
     /**
      * Cover constructor.
      *
-     * @param string $offset_x for example: 100 | 20% | center | left | right (default: center)
-     * @param string $offset_y for example: 100 | 20% | center | top | bottom (default: center)
-     * @param string $width for example: 100 | 20% (default: auto)
-     * @param string $height for example: 100 | 20% (default: auto)
+     * @param string      $offset_x for example: 100 | 20% | center | left | right (default: center)
+     * @param string      $offset_y for example: 100 | 20% | center | top | bottom (default: center)
+     * @param string|null $width for example: 100 | 20% (default: auto)
+     * @param string|null $height for example: 100 | 20% (default: auto)
      */
     public function __construct($offset_x = 'center', $offset_y = 'center', $width = null, $height = null)
     {
@@ -52,7 +52,7 @@ class Cover implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         if ($this->width !== null || $this->height !== null) {
             $origWidth = $manipulator->width();

@@ -5,30 +5,30 @@ namespace LireinCore\Image\PostProcessors;
 use LireinCore\Image\PostProcessor;
 
 /**
- * MozJpeg image postprocessor //todo: not implemented
+ * MozJpeg image postprocessor
  */
-class MozJpeg implements PostProcessor
+final class MozJpeg implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $path; //cjpeg //jpegtran
+    private $path; //cjpeg //jpegtran
 
     /**
      * @var int
      */
-    protected $quality;
+    private $quality;
 
     /**
-     * @var bool
+     * @var string[]
      */
-    protected $supportedFormats = ['jpeg'];
+    private $supportedFormats = ['jpeg'];
 
     /**
      * MozJpeg constructor.
      *
      * @param string $path path to postprocessor binary (default: '/opt/mozjpeg/bin/cjpeg')
-     * @param int $quality
+     * @param int    $quality
      */
     public function __construct($path = '/opt/mozjpeg/bin/cjpeg', $quality = 70)
     {
@@ -39,7 +39,7 @@ class MozJpeg implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function supportedFormats()
+    public function supportedFormats() : array
     {
         return $this->supportedFormats;
     }
@@ -47,9 +47,9 @@ class MozJpeg implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function process($path)
+    public function process(string $path) : PostProcessor
     {
-        //todo
+        //todo: not implemented
         //$stripAll = $this->_stripAll ? ' -strip all' : '';
         //$cmd = "{$this->_path}{$stripAll} -clobber -preserve -quiet -o{$this->_level} {$path}";
         //$this->exec($cmd);
@@ -61,7 +61,7 @@ class MozJpeg implements PostProcessor
      * @param string $cmd
      * @throws \RuntimeException
      */
-    protected function exec($cmd)
+    private function exec(string $cmd) : void
     {
         $out = [];
         $result = null;

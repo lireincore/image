@@ -7,34 +7,34 @@ use LireinCore\Image\PostProcessor;
 /**
  * OptiPng image postprocessor
  */
-class OptiPng implements PostProcessor
+final class OptiPng implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $path;
+    private $path;
 
     /**
      * @var int
      */
-    protected $level;
+    private $level;
 
     /**
      * @var bool
      */
-    protected $stripAll;
+    private $stripAll;
 
     /**
-     * @var bool
+     * @var string[]
      */
-    protected $supportedFormats = ['png']; //todo: also supported convert to 'bmp', 'gif', 'pnm', 'tiff'
+    private $supportedFormats = ['png']; //todo: also supported convert to 'bmp', 'gif', 'pnm', 'tiff'
 
     /**
      * OptiPng constructor.
      *
      * @param string $path path to postprocessor binary (default: '/usr/bin/optipng')
-     * @param int $level for example: 0-7, 0 - maximum compression speed | 7 - maximum compression size (default: 2)
-     * @param bool $strip_all remove all metadata (default: true)
+     * @param int    $level for example: 0-7, 0 - maximum compression speed | 7 - maximum compression size (default: 2)
+     * @param bool   $strip_all remove all metadata (default: true)
      */
     public function __construct($path = '/usr/bin/optipng', $level = 2, $strip_all = true)
     {
@@ -46,7 +46,7 @@ class OptiPng implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function supportedFormats()
+    public function supportedFormats() : array
     {
         return $this->supportedFormats;
     }
@@ -54,7 +54,7 @@ class OptiPng implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function process($path)
+    public function process(string $path) : PostProcessor
     {
         $stripAll = $this->stripAll ? ' -strip all' : '';
         $cmd = "{$this->path}{$stripAll} -clobber -preserve -quiet -o{$this->level} {$path}";
@@ -67,7 +67,7 @@ class OptiPng implements PostProcessor
      * @param string $cmd
      * @throws \RuntimeException
      */
-    protected function exec($cmd)
+    private function exec(string $cmd) : void
     {
         $out = [];
         $result = null;

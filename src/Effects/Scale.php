@@ -8,23 +8,23 @@ use LireinCore\Image\Manipulator;
 /**
  * Scale image
  */
-class Scale implements Effect
+final class Scale implements Effect
 {
     /**
      * @var string
      */
-    protected $ratio;
+    private $ratio;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $filter;
+    private $filter;
 
     /**
      * Scale constructor.
      *
-     * @param string $ratio for example: 0.5 | 50%
-     * @param string $filter
+     * @param string      $ratio for example: 0.5 | 50%
+     * @param string|null $filter
      */
     public function __construct($ratio, $filter = null)
     {
@@ -35,10 +35,10 @@ class Scale implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $ratio = $this->getRatio($this->ratio);
-        $manipulator->scale($ratio/*, $this->filter*/);
+        $manipulator->scale($ratio/*, $this->filter*/); //todo
 
         return $this;
     }
@@ -48,7 +48,7 @@ class Scale implements Effect
      *
      * @return float
      */
-    protected function getRatio($value)
+    private function getRatio(string $value) : float
     {
         if (strpos($value, '%') !== false) {
             $result = ((float)str_replace('%', '', $value)) / 100;

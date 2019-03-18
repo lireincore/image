@@ -9,69 +9,79 @@ use LireinCore\Image\Manipulator;
 /**
  * Image text
  */
-class Text implements Effect
+final class Text implements Effect
 {
     use Pixel;
 
     /**
      * @var string
      */
-    protected $text;
+    private $text;
 
     /**
      * @var string
      */
-    protected $font;
+    private $font;
 
     /**
      * @var string
      */
-    protected $offsetX;
+    private $offsetX;
 
     /**
      * @var string
      */
-    protected $offsetY;
+    private $offsetY;
 
     /**
      * @var int
      */
-    protected $size;
+    private $size;
 
     /**
      * @var string
      */
-    protected $color;
+    private $color;
 
     /**
      * @var int
      */
-    protected $opacity;
+    private $opacity;
 
     /**
-     * @var float|int
+     * @var int
      */
-    protected $angle;
+    private $angle;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $width;
+    private $width;
 
     /**
      * Text constructor.
      *
-     * @param string    $text text for writing
-     * @param string    $font font name or absolute path to the font file, for example: Verdana (default: Times New Roman)
-     * @param string    $offset_x for example: 100 | 20% (default: 0)
-     * @param string    $offset_y for example: 100 | 20% (default: 0)
-     * @param int       $size font size for example: 14 (default: 12)
-     * @param string    $color font color for example: '#fff' or '#ffffff' - hex | '50,50,50' - rgb | '50,50,50,50' - cmyk (default: #fff)
-     * @param int       $opacity for example: 0-100, 0 - fully transparent | 100 - not transparent (default: 100)
-     * @param float|int $angle in degrees for example: 90 (default: 0)
-     * @param string    $width for example: 100 | 20% - text box width (% - relative to the background image) (default: none)
+     * @param string      $text text for writing
+     * @param string      $font font name or absolute path to the font file, for example: Verdana (default: Times New Roman)
+     * @param string      $offset_x for example: 100 | 20% (default: 0)
+     * @param string      $offset_y for example: 100 | 20% (default: 0)
+     * @param int         $size font size for example: 14 (default: 12)
+     * @param string      $color font color for example: '#fff' or '#ffffff' - hex | '50,50,50' - rgb | '50,50,50,50' - cmyk (default: #fff)
+     * @param int         $opacity for example: 0-100, 0 - fully transparent | 100 - not transparent (default: 100)
+     * @param int         $angle in degrees for example: 90 (default: 0)
+     * @param string|null $width for example: 100 | 20% - text box width (% - relative to the background image) (default: none)
      */
-    public function __construct($text, $font = 'Times New Roman', $offset_x = '0', $offset_y = '0', $size = 12, $color = '#fff', $opacity = 100, $angle = 0, $width = null)
+    public function __construct(
+        $text,
+        $font = 'Times New Roman',
+        $offset_x = '0',
+        $offset_y = '0',
+        $size = 12,
+        $color = '#fff',
+        $opacity = 100,
+        $angle = 0,
+        $width = null
+    )
     {
         $this->text = $text;
         $this->font = $font;
@@ -87,7 +97,7 @@ class Text implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $origWidth = $manipulator->width();
         $origHeight = $manipulator->height();

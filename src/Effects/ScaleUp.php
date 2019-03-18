@@ -9,31 +9,31 @@ use LireinCore\Image\Manipulator;
 /**
  * ScaleUp image
  */
-class ScaleUp implements Effect
+final class ScaleUp implements Effect
 {
     use Pixel;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $maxWidth;
+    private $maxWidth;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $maxHeight;
+    private $maxHeight;
 
     /**
      * @var bool
      */
-    protected $allowIncrease;
+    private $allowIncrease;
 
     /**
      * ScaleUp constructor.
      *
-     * @param string $max_width for example: 100 | 20% (default: auto)
-     * @param string $max_height for example: 100 | 20% (default: auto)
-     * @param bool   $allow_increase increase if image is less (default: false)
+     * @param string|null $max_width for example: 100 | 20% (default: auto)
+     * @param string|null $max_height for example: 100 | 20% (default: auto)
+     * @param bool        $allow_increase increase if image is less (default: false)
      */
     public function __construct($max_width = null, $max_height = null, $allow_increase = false)
     {
@@ -45,7 +45,7 @@ class ScaleUp implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         if ($this->maxWidth !== null || $this->maxHeight !== null) {
             $origWidth = $manipulator->width();
@@ -69,13 +69,13 @@ class ScaleUp implements Effect
                 if ($origHeight > $maxHeight || ($origHeight < $maxHeight && $this->allowIncrease)) {
                     $newHeight = $maxHeight;
                     $newWidth = (int)round($newHeight / $origAspectRatio);
-                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/); //todo
                 }
             } else {
                 if ($origWidth > $maxWidth || ($origWidth < $maxWidth && $this->allowIncrease)) {
                     $newWidth = $maxWidth;
                     $newHeight = (int)round($newWidth * $origAspectRatio);
-                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/); //todo
                 }
             }
         }

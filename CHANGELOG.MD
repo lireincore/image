@@ -1,7 +1,9 @@
 # CHANGELOG
 
-### 0.2.1 (2018-08-12)
+### 0.3.0 (2019-02-18)
 
+  * Required php version changed to 7.1.3
+  * Added type hinting
   * Added helper function supportedDrivers()
 
 ### 0.2.0 (2018-08-07)

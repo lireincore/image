@@ -8,12 +8,12 @@ use LireinCore\Image\Manipulator;
 /**
  * Image gaussian blur
  */
-class Blur implements Effect
+final class Blur implements Effect
 {
     /**
      * @var float
      */
-    protected $sigma;
+    private $sigma;
 
     /**
      * Blur constructor.
@@ -28,7 +28,7 @@ class Blur implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $manipulator->blur($this->sigma);
 

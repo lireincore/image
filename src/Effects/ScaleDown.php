@@ -9,31 +9,31 @@ use LireinCore\Image\Manipulator;
 /**
  * ScaleDown image
  */
-class ScaleDown implements Effect
+final class ScaleDown implements Effect
 {
     use Pixel;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $minWidth;
+    private $minWidth;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $minHeight;
+    private $minHeight;
 
     /**
      * @var bool
      */
-    protected $allowDecrease;
+    private $allowDecrease;
 
     /**
      * ScaleDown constructor.
      *
-     * @param string $min_width for example: 100 | 20% (default: auto)
-     * @param string $min_height for example: 100 | 20% (default: auto)
-     * @param bool   $allow_decrease decrease if image is greater (default: false)
+     * @param string|null $min_width for example: 100 | 20% (default: auto)
+     * @param string|null $min_height for example: 100 | 20% (default: auto)
+     * @param bool        $allow_decrease decrease if image is greater (default: false)
      */
     public function __construct($min_width = null, $min_height = null, $allow_decrease = false)
     {
@@ -45,7 +45,7 @@ class ScaleDown implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         if ($this->minWidth !== null || $this->minHeight !== null) {
             $origWidth = $manipulator->width();
@@ -69,13 +69,13 @@ class ScaleDown implements Effect
                 if ($origHeight < $minHeight || ($origHeight > $minHeight && $this->allowDecrease)) {
                     $newHeight = $minHeight;
                     $newWidth = (int)round($newHeight / $origAspectRatio);
-                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/); //todo
                 }
             } else {
                 if ($origWidth < $minWidth || ($origWidth > $minWidth && $this->allowDecrease)) {
                     $newWidth = $minWidth;
                     $newHeight = (int)round($newWidth * $origAspectRatio);
-                    $manipulator->resize($newWidth, $newHeight/*, $filter*/);
+                    $manipulator->resize($newWidth, $newHeight/*, $filter*/); //todo
                 }
             }
         }

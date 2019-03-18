@@ -4,62 +4,62 @@ namespace LireinCore\Image;
 
 interface Manipulator
 {
-    const DRIVER_DEFAULT = 1; //default graphic driver
-    const DRIVER_GM = 2; //gmagick graphic driver
-    const DRIVER_IM = 3; //imagick graphic driver
-    const DRIVER_GD = 4; //gd graphic driver
+    public const DRIVER_DEFAULT = 1; //default graphic driver
+    public const DRIVER_GM = 2;      //gmagick graphic driver
+    public const DRIVER_IM = 3;      //imagick graphic driver
+    public const DRIVER_GD = 4;      //gd graphic driver
 
-    const MIN_REQUIRED_GM_VER = '1.0.0';
-    const MIN_REQUIRED_IM_VER = '6.2.9';
-    const MIN_REQUIRED_GD_VER = '2.0.1';
+    public const MIN_REQUIRED_GM_VER = '1.0.0';
+    public const MIN_REQUIRED_IM_VER = '6.2.9';
+    public const MIN_REQUIRED_GD_VER = '2.0.35';
 
-    const FILTER_UNDEFINED = 'undefined';
-    const FILTER_POINT = 'point';
-    const FILTER_BOX = 'box';
-    const FILTER_TRIANGLE = 'triangle';
-    const FILTER_HERMITE = 'hermite';
-    const FILTER_HANNING = 'hanning';
-    const FILTER_HAMMING = 'hamming';
-    const FILTER_BLACKMAN = 'blackman';
-    const FILTER_GAUSSIAN = 'gaussian';
-    const FILTER_QUADRATIC = 'quadratic';
-    const FILTER_CUBIC = 'cubic';
-    const FILTER_CATROM = 'catrom';
-    const FILTER_MITCHELL = 'mitchell';
-    const FILTER_LANCZOS = 'lanczos';
-    const FILTER_BESSEL = 'bessel';
-    const FILTER_SINC = 'sinc';
+    public const FILTER_UNDEFINED = 'undefined';
+    public const FILTER_POINT = 'point';
+    public const FILTER_BOX = 'box';
+    public const FILTER_TRIANGLE = 'triangle';
+    public const FILTER_HERMITE = 'hermite';
+    public const FILTER_HANNING = 'hanning';
+    public const FILTER_HAMMING = 'hamming';
+    public const FILTER_BLACKMAN = 'blackman';
+    public const FILTER_GAUSSIAN = 'gaussian';
+    public const FILTER_QUADRATIC = 'quadratic';
+    public const FILTER_CUBIC = 'cubic';
+    public const FILTER_CATROM = 'catrom';
+    public const FILTER_MITCHELL = 'mitchell';
+    public const FILTER_LANCZOS = 'lanczos';
+    public const FILTER_BESSEL = 'bessel';
+    public const FILTER_SINC = 'sinc';
 
     /**
      * @param int $driver
      * @param bool $tryToUseOtherDrivers
      * @throws \RuntimeException
      */
-    public function __construct($driver = self::DRIVER_DEFAULT, $tryToUseOtherDrivers = true);
+    public function __construct(int $driver = self::DRIVER_DEFAULT, bool $tryToUseOtherDrivers = true);
 
     /**
      * @return Manipulator
      * @throws \RuntimeException
      */
-    public function instance();
+    public function instance() : Manipulator;
 
     /**
-     * @param $filepath
+     * @param string $filepath
      * @return $this
      * @throws \RuntimeException
      */
-    public function open($filepath);
+    public function open(string $filepath) : self;
 
     /**
      * @param int $width
      * @param int $height
-     * @param string $color
+     * @param string|array $color
      * @param int $transparency
      * @return $this
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function create($width, $height, $color = '#fff', $transparency = 0);
+    public function create(int $width, int $height, $color = '#fff', int $transparency = 0) : self;
 
     /**
      * @param string $destPath
@@ -67,13 +67,13 @@ interface Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function save($destPath, $options = []);
+    public function save(string $destPath, array $options = []) : self;
 
     /**
      * @return Manipulator
      * @throws \RuntimeException
      */
-    public function copy();
+    public function copy() : Manipulator;
 
     /**
      * @param Effect $effect
@@ -82,7 +82,7 @@ interface Manipulator
      * @throws \OutOfBoundsException
      * @throws \RuntimeException
      */
-    public function apply(Effect $effect);
+    public function apply(Effect $effect) : self;
 
     /**
      * @param Manipulator $manipulator
@@ -94,7 +94,7 @@ interface Manipulator
      * @throws \OutOfBoundsException
      * @throws \RuntimeException
      */
-    public function paste(Manipulator $manipulator, $offsetX, $offsetY, $opacity = 100);
+    public function paste(Manipulator $manipulator, int $offsetX, int $offsetY, int $opacity = 100) : self;
 
     /**
      * @param int $width
@@ -104,7 +104,7 @@ interface Manipulator
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function resize($width, $height, $filter = self::FILTER_UNDEFINED);
+    public function resize(int $width, int $height, string $filter = self::FILTER_UNDEFINED) : self;
 
     /**
      * @param int $offsetX
@@ -116,7 +116,7 @@ interface Manipulator
      * @throws \OutOfBoundsException
      * @throws \RuntimeException
      */
-    public function crop($offsetX, $offsetY, $width, $height);
+    public function crop(int $offsetX, int $offsetY, int $width, int $height) : self;
 
     /**
      * @param float $ratio
@@ -125,55 +125,55 @@ interface Manipulator
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function scale($ratio, $filter = self::FILTER_UNDEFINED);
+    public function scale(float $ratio, string $filter = self::FILTER_UNDEFINED) : self;
 
     /**
      * @return $this
      * @throws \RuntimeException
      */
-    public function flipHorizontally();
+    public function flipHorizontally() : self;
 
     /**
      * @return $this
      * @throws \RuntimeException
      */
-    public function flipVertically();
+    public function flipVertically() : self;
 
     /**
-     * @param float $angle
+     * @param int $angle
      * @param string $bgcolor
      * @param int $bgtransparency
      * @return $this
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function rotate($angle, $bgcolor = '#fff', $bgtransparency = 0);
+    public function rotate(int $angle, string $bgcolor = '#fff', int $bgtransparency = 0) : self;
 
     /**
      * @return $this
      * @throws \RuntimeException
      */
-    public function negative();
+    public function negative() : self;
 
     /**
      * @return $this
      * @throws \RuntimeException
      */
-    public function grayscale();
+    public function grayscale() : self;
 
     /**
      * @param float $correction
      * @return $this
      * @throws \RuntimeException
      */
-    public function gamma($correction);
+    public function gamma(float $correction) : self;
 
     /**
      * @param float $sigma
      * @return $this
      * @throws \RuntimeException
      */
-    public function blur($sigma);
+    public function blur(float $sigma) : self;
 
     /**
      * @param string $text
@@ -183,26 +183,36 @@ interface Manipulator
      * @param int $size
      * @param string|array $color
      * @param int $opacity
-     * @param float|int $angle
-     * @param null|int $width
+     * @param int $angle
+     * @param int|null $width
      * @return $this
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function text($text, $font = 'Times New Roman', $offsetX = 0, $offsetY = 0, $size = 12, $color = '#fff', $opacity = 100, $angle = 0, $width = null);
+    public function text(
+        string $text,
+        string $font = 'Times New Roman',
+        int $offsetX = 0,
+        int $offsetY = 0,
+        int $size = 12,
+        $color = '#fff',
+        int $opacity = 100,
+        int $angle = 0,
+        ?int $width = null
+    ) : self;
 
     /**
      * @return int
      */
-    public function driver();
+    public function driver() : int;
 
     /**
      * @return int
      */
-    public function width();
+    public function width() : int;
 
     /**
      * @return int
      */
-    public function height();
+    public function height() : int;
 }

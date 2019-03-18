@@ -7,40 +7,40 @@ use LireinCore\Image\PostProcessor;
 /**
  * JpegOptim image postprocessor
  */
-class JpegOptim implements PostProcessor
+final class JpegOptim implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $path;
+    private $path;
 
     /**
      * @var int
      */
-    protected $quality;
+    private $quality;
 
     /**
      * @var bool
      */
-    protected $stripAll;
+    private $stripAll;
 
     /**
      * @var bool
      */
-    protected $progressive;
+    private $progressive;
 
     /**
-     * @var bool
+     * @var string[]
      */
-    protected $supportedFormats = ['jpeg'];
+    private $supportedFormats = ['jpeg'];
 
     /**
      * JpegOptim constructor.
      *
      * @param string $path path to postprocessor binary (default: '/usr/bin/jpegoptim')
-     * @param int $quality for example: 0-100, 0 - worst | 100 - best (default: 85)
-     * @param bool $strip_all remove all metadata (Comments, Exif, IPTC, ICC, XMP) (default: true)
-     * @param bool $progressive convert to progressive jpeg (default: true)
+     * @param int    $quality for example: 0-100, 0 - worst | 100 - best (default: 85)
+     * @param bool   $strip_all remove all metadata (Comments, Exif, IPTC, ICC, XMP) (default: true)
+     * @param bool   $progressive convert to progressive jpeg (default: true)
      */
     public function __construct($path = '/usr/bin/jpegoptim', $quality = 85, $strip_all = true, $progressive = true)
     {
@@ -53,7 +53,7 @@ class JpegOptim implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function supportedFormats()
+    public function supportedFormats() : array
     {
         return $this->supportedFormats;
     }
@@ -61,7 +61,7 @@ class JpegOptim implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function process($path)
+    public function process(string $path) : PostProcessor
     {
         $stripAll = $this->stripAll ? ' --strip-all' : '';
         $progressive = $this->progressive ? ' --all-progressive' : '';
@@ -76,7 +76,7 @@ class JpegOptim implements PostProcessor
      * @param string $cmd
      * @throws \RuntimeException
      */
-    protected function exec($cmd)
+    private function exec(string $cmd) : void
     {
         $out = [];
         $result = null;

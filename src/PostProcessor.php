@@ -5,14 +5,14 @@ namespace LireinCore\Image;
 interface PostProcessor
 {
     /**
-     * @return array
+     * @return string[]
      */
-    public function supportedFormats();
+    public function supportedFormats() : array;
 
     /**
      * @param string $path
      * @return $this
      * @throws \RuntimeException
      */
-    public function process($path);
+    public function process(string $path) : self;
 }

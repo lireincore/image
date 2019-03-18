@@ -9,31 +9,31 @@ use LireinCore\Image\Manipulator;
 /**
  * Resize image
  */
-class Resize implements Effect
+final class Resize implements Effect
 {
     use Pixel;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $width;
+    private $width;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $height;
+    private $height;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $filter;
+    private $filter;
 
     /**
      * Resize constructor.
      * 
-     * @param string $width for example: 100 | 20% (default: auto)
-     * @param string $height for example: 100 | 20% (default: auto)
-     * @param string $filter
+     * @param string|null $width for example: 100 | 20% (default: auto)
+     * @param string|null $height for example: 100 | 20% (default: auto)
+     * @param string|null $filter
      */
     public function __construct($width = null, $height = null, $filter = null)
     {
@@ -45,7 +45,7 @@ class Resize implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         if ($this->width !== null || $this->height !== null) {
             $origWidth = $manipulator->width();
@@ -63,7 +63,7 @@ class Resize implements Effect
                 $height = $this->pxSize($this->height, $origHeight);
             }
 
-            $manipulator->resize($width, $height/*, $this->filter*/);
+            $manipulator->resize($width, $height/*, $this->filter*/); //todo
         }
 
         return $this;

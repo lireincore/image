@@ -11,22 +11,22 @@ use Imagine\Image\Palette\RGB;
 use Imagine\Image\AbstractImage;
 use Imagine\Image\AbstractImagine;
 
-class Imagine implements Manipulator
+final class Imagine implements Manipulator
 {
     /**
      * @var AbstractImagine
      */
-    protected $imagine;
+    private $imagine;
     
     /**
      * @var AbstractImage
      */
-    protected $image;
+    private $image;
     
     /**
      * @var string
      */
-    protected $driver;
+    private $driver;
 
     /**
      * Image constructor.
@@ -35,9 +35,9 @@ class Imagine implements Manipulator
      * @param bool $tryToUseOtherDrivers
      * @throws \RuntimeException
      */
-    public function __construct($driver = Manipulator::DRIVER_DEFAULT, $tryToUseOtherDrivers = true)
+    public function __construct(int $driver = Manipulator::DRIVER_DEFAULT, bool $tryToUseOtherDrivers = true)
     {
-        if ($driver == Manipulator::DRIVER_IM || $driver == Manipulator::DRIVER_DEFAULT) {
+        if ($driver === Manipulator::DRIVER_IM || $driver === Manipulator::DRIVER_DEFAULT) {
             try {
                 $this->imagine = new \Imagine\Imagick\Imagine();
                 $this->driver = Manipulator::DRIVER_IM;
@@ -58,7 +58,7 @@ class Imagine implements Manipulator
                     throw new \RuntimeException('Imagick not installed or higher version is required', 0, $ex1);
                 }
             }
-        } elseif ($driver == Manipulator::DRIVER_GM) {
+        } elseif ($driver === Manipulator::DRIVER_GM) {
             try {
                 $this->imagine = new \Imagine\Gmagick\Imagine();
                 $this->driver = Manipulator::DRIVER_GM;
@@ -79,7 +79,7 @@ class Imagine implements Manipulator
                     throw new \RuntimeException('Gmagick not installed or higher version is required', 0, $ex1);
                 }
             }
-        } elseif ($driver == Manipulator::DRIVER_GD) {
+        } elseif ($driver === Manipulator::DRIVER_GD) {
             try {
                 $this->imagine = new \Imagine\Gd\Imagine();
                 $this->driver = Manipulator::DRIVER_GD;
@@ -109,17 +109,17 @@ class Imagine implements Manipulator
      * @return Manipulator
      * @throws \RuntimeException
      */
-    public function instance()
+    public function instance() : Manipulator
     {
         return new static($this->driver(), false);
     }
 
     /**
-     * @param $filepath
+     * @param string $filepath
      * @return $this
      * @throws \RuntimeException
      */
-    public function open($filepath)
+    public function open(string $filepath) : Manipulator
     {
         $this->image = $this->imagine()->open($filepath);
 
@@ -135,7 +135,7 @@ class Imagine implements Manipulator
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function create($width, $height, $color = '#fff', $transparency = 0)
+    public function create(int $width, int $height, $color = '#fff', int $transparency = 0) : Manipulator
     {
         $size = new Box($width, $height);
         $palette = new RGB();
@@ -156,7 +156,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function save($destPath, $options = [])
+    public function save(string $destPath, array $options = []) : Manipulator
     {
         $destPathInfo = pathinfo($destPath);
         if (!is_dir($destPathInfo['dirname'])) {
@@ -177,7 +177,7 @@ class Imagine implements Manipulator
      * @return Manipulator
      * @throws \RuntimeException
      */
-    public function copy()
+    public function copy() : Manipulator
     {
         $manipulator = new static($this->driver(), false);
         $manipulator->image = $this->image()->copy();
@@ -192,7 +192,7 @@ class Imagine implements Manipulator
      * @throws \OutOfBoundsException
      * @throws \RuntimeException
      */
-    public function apply(Effect $effect)
+    public function apply(Effect $effect) : Manipulator
     {
         $effect->apply($this);
 
@@ -209,18 +209,25 @@ class Imagine implements Manipulator
      * @throws \OutOfBoundsException
      * @throws \RuntimeException
      */
-    public function paste(Manipulator $manipulator, $offsetX, $offsetY, $opacity = 100)
+    public function paste(Manipulator $manipulator, int $offsetX, int $offsetY, int $opacity = 100) : Manipulator
     {
         if (!$manipulator instanceof static) {
             throw new \InvalidArgumentException(sprintf('LireinCore\Image\Manipulators\Imagine can only paste() LireinCore\Image\Manipulators\Imagine instances, %s given', get_class($manipulator)));
         }
 
-        if ($opacity != 100) {
+        if ($opacity !== 100) {
             $overlayRes = $manipulator->driverResObject();
             if ($this->driver() === Manipulator::DRIVER_GM) {
                 // @todo: opacity not supported
             } elseif ($this->driver() === Manipulator::DRIVER_IM) {
-                $overlayRes->setImageOpacity($opacity / 100);
+                if (ImageHelper::isImagickAvailable('6.3.1')) {
+                    // setImageOpacity was replaced with setImageAlpha in php-imagick v3.4.3
+                    if (method_exists($overlayRes, 'setImageAlpha')) {
+                        $overlayRes->setImageAlpha($opacity / 100);
+                    } else {
+                        $overlayRes->setImageOpacity($opacity / 100);
+                    }
+                }
             } elseif ($this->driver() === Manipulator::DRIVER_GD) {
                 $width = $manipulator->width();
                 $height = $manipulator->height();
@@ -234,7 +241,7 @@ class Imagine implements Manipulator
             }
         }
 
-        if ($opacity == 100 || $this->driver() === Manipulator::DRIVER_GM || $this->driver() === Manipulator::DRIVER_IM) {
+        if ($opacity === 100 || $this->driver() === Manipulator::DRIVER_GM || $this->driver() === Manipulator::DRIVER_IM) {
             $this->image()->paste($manipulator->image(), new Point($offsetX, $offsetY));
         }
 
@@ -249,10 +256,8 @@ class Imagine implements Manipulator
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function resize($width, $height, $filter = Manipulator::FILTER_UNDEFINED)
+    public function resize(int $width, int $height, string $filter = Manipulator::FILTER_UNDEFINED) : Manipulator
     {
-        $width = (int)$width;
-        $height = (int)$height;
         if ($width > 0 && $height > 0) {
             $origWidth = $this->width();
             $origHeight = $this->height();
@@ -274,18 +279,13 @@ class Imagine implements Manipulator
      * @throws \OutOfBoundsException
      * @throws \RuntimeException
      */
-    public function crop($offsetX, $offsetY, $width, $height)
+    public function crop(int $offsetX, int $offsetY, int $width, int $height) : Manipulator
     {
-        $width = (int)$width;
-        $height = (int)$height;
-        $offsetX = (int)$offsetX;
-        $offsetY = (int)$offsetY;
-
         if ($width > 0 && $height > 0 && $offsetX >= 0 && $offsetY >= 0) {
             $origWidth = $this->width();
             $origHeight = $this->height();
             if ($offsetX + $width < $origWidth && $offsetY + $height < $origHeight) {
-                if ($offsetX != 0 || $offsetY != 0 || $origWidth != $width || $origHeight != $height) {
+                if ($offsetX !== 0 || $offsetY !== 0 || $origWidth !== $width || $origHeight !== $height) {
                     $this->image()->crop(new Point($offsetX, $offsetY), new Box($width, $height));
                 }
             }
@@ -301,7 +301,7 @@ class Imagine implements Manipulator
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function scale($ratio, $filter = Manipulator::FILTER_UNDEFINED)
+    public function scale(float $ratio, string $filter = Manipulator::FILTER_UNDEFINED) : Manipulator
     {
         $ratio = abs($ratio);
         $newWidth = round($ratio * $this->width());
@@ -314,7 +314,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function flipHorizontally()
+    public function flipHorizontally() : Manipulator
     {
         $this->image()->flipHorizontally();
 
@@ -325,7 +325,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function flipVertically()
+    public function flipVertically() : Manipulator
     {
         $this->image()->flipVertically();
 
@@ -333,14 +333,14 @@ class Imagine implements Manipulator
     }
 
     /**
-     * @param float|int $angle
+     * @param int $angle
      * @param string|array $bgcolor
      * @param int $bgtransparency
      * @return $this
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function rotate($angle, $bgcolor = '#fff', $bgtransparency = 0)
+    public function rotate(int $angle, $bgcolor = '#fff', int $bgtransparency = 0) : Manipulator
     {
         $palette = new RGB();
         if ($this->driver() === Manipulator::DRIVER_GM) {
@@ -358,7 +358,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function negative()
+    public function negative() : Manipulator
     {
         $this->image()->effects()->negative();
 
@@ -369,7 +369,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function grayscale()
+    public function grayscale() : Manipulator
     {
         $this->image()->effects()->grayscale();
 
@@ -381,7 +381,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function gamma($correction)
+    public function gamma(float $correction) : Manipulator
     {
         $this->image()->effects()->gamma($correction);
 
@@ -393,7 +393,7 @@ class Imagine implements Manipulator
      * @return $this
      * @throws \RuntimeException
      */
-    public function blur($sigma)
+    public function blur(float $sigma) : Manipulator
     {
         $this->image()->effects()->blur($sigma);
 
@@ -408,13 +408,23 @@ class Imagine implements Manipulator
      * @param int $size
      * @param string|array $color
      * @param int $opacity
-     * @param float|int $angle
-     * @param null|int $width
+     * @param int $angle
+     * @param int|null $width
      * @return $this
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function text($text, $font = 'Times New Roman', $offsetX = 0, $offsetY = 0, $size = 12, $color = '#fff', $opacity = 100, $angle = 0, $width = null)
+    public function text(
+        string $text,
+        string $font = 'Times New Roman',
+        int $offsetX = 0,
+        int $offsetY = 0,
+        int $size = 12,
+        $color = '#fff',
+        int $opacity = 100,
+        int $angle = 0,
+        ?int $width = null
+    ) : Manipulator
     {
         $palette = new RGB();
         if ($this->driver() === Manipulator::DRIVER_GM) {
@@ -423,8 +433,8 @@ class Imagine implements Manipulator
         } else {
             $colorObj = $palette->color($color, $opacity);
         }
-        $font = $this->imagine()->font($font, $size, $colorObj);
-        $this->image()->draw()->text($text, $font, new Point($offsetX, $offsetY), $angle, $width);
+        $fontObj = $this->imagine()->font($font, $size, $colorObj);
+        $this->image()->draw()->text($text, $fontObj, new Point($offsetX, $offsetY), $angle, $width);
 
         return $this;
     }
@@ -432,7 +442,7 @@ class Imagine implements Manipulator
     /**
      * @return int
      */
-    public function driver()
+    public function driver() : int
     {
         return $this->driver;
     }
@@ -440,7 +450,7 @@ class Imagine implements Manipulator
     /**
      * @return int
      */
-    public function width()
+    public function width() : int
     {
         $size = $this->image()->getSize();
 
@@ -450,7 +460,7 @@ class Imagine implements Manipulator
     /**
      * @return int
      */
-    public function height()
+    public function height() : int
     {
         $size = $this->image()->getSize();
 
@@ -460,7 +470,7 @@ class Imagine implements Manipulator
     /**
      * @return AbstractImagine
      */
-    protected function imagine()
+    private function imagine() : AbstractImagine
     {
         return $this->imagine;
     }
@@ -468,7 +478,7 @@ class Imagine implements Manipulator
     /**
      * @return AbstractImage
      */
-    protected function image()
+    private function image() : AbstractImage
     {
         return $this->image;
     }
@@ -476,14 +486,16 @@ class Imagine implements Manipulator
     /**
      * @return \Imagick|\Gmagick|resource
      */
-    protected function driverResObject()
+    private function driverResObject()
     {
         if ($this->driver() === static::DRIVER_GM) {
             return $this->image()->getGmagick();
-        } elseif ($this->driver() === static::DRIVER_IM) {
-            return $this->image()->getImagick();
-        } else {
-            return $this->image()->getGdResource();
         }
+
+        if ($this->driver() === static::DRIVER_IM) {
+            return $this->image()->getImagick();
+        }
+
+        return $this->image()->getGdResource();
     }
 }

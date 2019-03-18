@@ -9,57 +9,65 @@ use LireinCore\Image\Manipulator;
 /**
  * Fit image in box
  */
-class Fit implements Effect
+final class Fit implements Effect
 {
     use Pixel;
 
     /**
      * @var string
      */
-    protected $offsetX;
+    private $offsetX;
 
     /**
      * @var string
      */
-    protected $offsetY;
+    private $offsetY;
+
+    /**
+     * @var string|null
+     */
+    private $width;
+
+    /**
+     * @var string|null
+     */
+    private $height;
 
     /**
      * @var string
      */
-    protected $width;
-
-    /**
-     * @var string
-     */
-    protected $height;
-
-    /**
-     * @var string
-     */
-    protected $bgColor;
+    private $bgColor;
 
     /**
      * @var int
      */
-    protected $bgTransparency;
+    private $bgTransparency;
 
     /**
      * @var bool
      */
-    protected $allowIncrease;
+    private $allowIncrease;
 
     /**
      * Fit constructor.
      *
-     * @param string $offset_x for example: 100 | 20% | center | left | right (default: center)
-     * @param string $offset_y for example: 100 | 20% | center | top | bottom (default: center)
-     * @param string $width for example: 100 | 20% (default: auto)
-     * @param string $height for example: 100 | 20% (default: auto)
-     * @param string $bgcolor for example: '#fff' or '#ffffff' - hex | '50,50,50' - rgb | '50,50,50,50' - cmyk (default: #fff)
-     * @param int    $bgtransparency for example: 0-100, 0 - not transparent | 100 - fully transparent (default: 0)
-     * @param bool   $allow_increase increase if image is less (default: false)
+     * @param string      $offset_x for example: 100 | 20% | center | left | right (default: center)
+     * @param string      $offset_y for example: 100 | 20% | center | top | bottom (default: center)
+     * @param string|null $width for example: 100 | 20% (default: auto)
+     * @param string|null $height for example: 100 | 20% (default: auto)
+     * @param string      $bgcolor for example: '#fff' or '#ffffff' - hex | '50,50,50' - rgb | '50,50,50,50' - cmyk (default: #fff)
+     * @param int         $bgtransparency for example: 0-100, 0 - not transparent | 100 - fully transparent (default: 0)
+     * @param bool        $allow_increase increase if image is less (default: false)
      */
-    public function __construct($offset_x = 'center', $offset_y = 'center', $width = null, $height = null, $bgcolor = '#fff', $bgtransparency = 0, $allow_increase = false)
+    public function __construct(
+        $offset_x = 'center',
+        $offset_y = 'center',
+        $width = null,
+        $height = null,
+        $bgcolor = '#fff',
+        $bgtransparency = 0,
+        $allow_increase = false
+    )
     {
         $this->offsetX = $offset_x;
         $this->offsetY = $offset_y;
@@ -73,7 +81,7 @@ class Fit implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         if ($this->width !== null || $this->height !== null) {
             $origWidth = $manipulator->width();

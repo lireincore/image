@@ -8,16 +8,16 @@ use LireinCore\Image\Manipulator;
 /**
  * Flip image
  */
-class Flip implements Effect
+final class Flip implements Effect
 {
-    const MODE_VERTICAL = 'vertical';
-    const MODE_HORIZONTAL = 'horizontal';
-    const MODE_FULL = 'full';
+    public const MODE_VERTICAL = 'vertical';
+    public const MODE_HORIZONTAL = 'horizontal';
+    public const MODE_FULL = 'full';
 
     /**
      * @var string
      */
-    protected $mode;
+    private $mode;
 
     /**
      * Flip constructor.
@@ -32,7 +32,7 @@ class Flip implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         if ($this->mode === static::MODE_VERTICAL) {
             $manipulator->flipVertically();

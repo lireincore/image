@@ -7,28 +7,28 @@ use LireinCore\Image\PostProcessor;
 /**
  * PngQuant image postprocessor
  */
-class PngQuant implements PostProcessor
+final class PngQuant implements PostProcessor
 {
     /**
      * @var string
      */
-    protected $path;
+    private $path;
 
     /**
      * @var int
      */
-    protected $quality;
+    private $quality;
 
     /**
-     * @var bool
+     * @var string[]
      */
-    protected $supportedFormats = ['png'];
+    private $supportedFormats = ['png'];
 
     /**
      * PngQuant constructor.
      *
      * @param string $path path to postprocessor binary (default: '/usr/bin/pngquant')
-     * @param int $quality for example: 0-100, 0 - worst | 100 - best (default: 85)
+     * @param int    $quality for example: 0-100, 0 - worst | 100 - best (default: 85)
      */
     public function __construct($path = '/usr/bin/pngquant', $quality = 85)
     {
@@ -39,7 +39,7 @@ class PngQuant implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function supportedFormats()
+    public function supportedFormats() : array
     {
         return $this->supportedFormats;
     }
@@ -47,7 +47,7 @@ class PngQuant implements PostProcessor
     /**
      * @inheritdoc
      */
-    public function process($path)
+    public function process(string $path) : PostProcessor
     {
         //todo
         //--speed N         speed/quality trade-off. 1=slow, 3=default, 11=fast & rough
@@ -64,7 +64,7 @@ class PngQuant implements PostProcessor
      * @param string $cmd
      * @throws \RuntimeException
      */
-    protected function exec($cmd)
+    private function exec(string $cmd) : void
     {
         $out = [];
         $result = null;

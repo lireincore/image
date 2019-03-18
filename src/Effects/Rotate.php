@@ -9,31 +9,31 @@ use LireinCore\Image\Manipulator;
 /**
  * Rotate image
  */
-class Rotate implements Effect
+final class Rotate implements Effect
 {
     use Pixel;
 
     /**
-     * @var float|int
+     * @var int
      */
-    protected $angle;
+    private $angle;
 
     /**
      * @var string
      */
-    protected $bgColor;
+    private $bgColor;
 
     /**
      * @var int
      */
-    protected $bgTransparency;
+    private $bgTransparency;
 
     /**
      * Rotate constructor.
      *
-     * @param float|int $angle in degrees for example: 90
-     * @param string    $bgcolor for example: '#fff' or '#ffffff' - hex | '50,50,50' - rgb | '50,50,50,50' - cmyk (default: #fff)
-     * @param int       $bgtransparency for example: 0-100, 0 - not transparent | 100 - fully transparent (default: 0)
+     * @param int    $angle in degrees for example: 90
+     * @param string $bgcolor for example: '#fff' or '#ffffff' - hex | '50,50,50' - rgb | '50,50,50,50' - cmyk (default: #fff)
+     * @param int    $bgtransparency for example: 0-100, 0 - not transparent | 100 - fully transparent (default: 0)
      */
     public function __construct($angle, $bgcolor = '#fff', $bgtransparency = 0)
     {
@@ -45,7 +45,7 @@ class Rotate implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $bgColor = $this->parseColor($this->bgColor);
         $manipulator->rotate($this->angle, $bgColor, $this->bgTransparency);

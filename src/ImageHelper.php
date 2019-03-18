@@ -2,12 +2,12 @@
 
 namespace LireinCore\Image;
 
-class ImageHelper
+final class ImageHelper
 {
     /**
      * @return array
      */
-    public static function formats()
+    public static function formats() : array
     {
         return [
             'jpeg' => [
@@ -86,17 +86,17 @@ class ImageHelper
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public static function supportedDrivers()
+    public static function supportedDrivers() : array
     {
         return ['gd', 'imagick', 'gmagick'];
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public static function supportedDestinationFormats()
+    public static function supportedDestinationFormats() : array
     {
         return ['jpeg', 'png', 'gif', 'wbmp', 'xbm'];
     }
@@ -105,12 +105,12 @@ class ImageHelper
      * @param string $mime
      * @return null|string
      */
-    public static function formatByMime($mime)
+    public static function formatByMime(string $mime) : ?string
     {
         $formats = static::formats();
 
         foreach ($formats as $name => $format) {
-            if (in_array($mime, $format['mime'])) {
+            if (in_array($mime, $format['mime'], true)) {
                 return $name;
             }
         }
@@ -122,12 +122,12 @@ class ImageHelper
      * @param string $ext
      * @return null|string
      */
-    public static function formatByExt($ext)
+    public static function formatByExt(string $ext) : ?string
     {
         $formats = static::formats();
 
         foreach ($formats as $name => $format) {
-            if (in_array($ext, $format['ext'])) {
+            if (in_array($ext, $format['ext'], true)) {
                 return $name;
             }
         }
@@ -139,7 +139,7 @@ class ImageHelper
      * @param string $format
      * @return null|string
      */
-    public static function extensionByFormat($format)
+    public static function extensionByFormat(string $format) : ?string
     {
         $formats = static::formats();
 
@@ -154,19 +154,19 @@ class ImageHelper
      * @param string $path
      * @return bool
      */
-    public static function rrmdir($path)
+    public static function rrmdir(string $path) : bool
     {
         if (($dir = @opendir($path)) === false) {
             return false;
         }
 
         while (($file = readdir($dir)) !== false) {
-            if (($file != '.') && ($file != '..')) {
-                $full = $path . DIRECTORY_SEPARATOR . $file;
-                if (is_dir($full)) {
-                    static::rrmdir($full);
+            if (($file !== '.') && ($file !== '..')) {
+                $fullPath = $path . DIRECTORY_SEPARATOR . $file;
+                if (is_dir($fullPath)) {
+                    static::rrmdir($fullPath);
                 } else {
-                    @unlink($full);
+                    @unlink($fullPath);
                 }
             }
         }
@@ -181,14 +181,13 @@ class ImageHelper
      * @param int $mode
      * @throws \RuntimeException
      */
-    public static function rmkdir($path, $mode = 0775)
+    public static function rmkdir(string $path, int $mode = 0775) : void
     {
         $path = trim($path, '\\/');
         $dirs = explode(DIRECTORY_SEPARATOR, $path);
         $pathPart = '';
         $umask = umask();
         $sysMode = $mode & ~$umask;
-        $chmodFlag = $mode === $sysMode ? false : true;
 
         foreach ($dirs as $dir) {
             $pathPart .= DIRECTORY_SEPARATOR . $dir;
@@ -197,7 +196,7 @@ class ImageHelper
                     throw new \RuntimeException("Failed to make dir '{$pathPart}'");
                 }
 
-                if ($chmodFlag) {
+                if ($mode !== $sysMode) {
                     chmod($pathPart, $mode);
                 }
             }
@@ -208,13 +207,11 @@ class ImageHelper
      * @param string|null $version
      * @return bool
      */
-    public static function isGDAvailable($version = null)
+    public static function isGDAvailable(?string $version = null) : bool
     {
         if (function_exists('gd_info')) {
-            if ($version !== null) {
-                if (version_compare($version, GD_VERSION) > 0) {
-                    return false;
-                }
+            if ($version !== null && version_compare($version, GD_VERSION) > 0) {
+                return false;
             }
 
             return true;
@@ -227,7 +224,7 @@ class ImageHelper
      * @param string|null $version
      * @return bool
      */
-    public static function isImagickAvailable($version = null)
+    public static function isImagickAvailable(?string $version = null) : bool
     {
         if (class_exists('Imagick')) {
             if ($version !== null) {
@@ -248,7 +245,7 @@ class ImageHelper
      * @param string|null $version
      * @return bool
      */
-    public static function isGmagickAvailable($version = null)
+    public static function isGmagickAvailable(?string $version = null) : bool
     {
         if (class_exists('Gmagick')) {
             if ($version !== null) {
@@ -264,6 +261,49 @@ class ImageHelper
             }
 
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|null $version
+     * @return bool
+     */
+    public static function isGDExtensionAvailable(?string $version = null) : bool
+    {
+        if (function_exists('gd_info')) {
+            if ($version !== null && version_compare(phpversion('gd'), $version) > 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|null $version
+     * @return bool
+     */
+    public static function isImagickExtensionAvailable(?string $version = null) : bool
+    {
+        if ($version !== null && version_compare(phpversion('imagick'), $version) > 0) {
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|null $version
+     * @return bool
+     */
+    public static function isGmagickExtensionAvailable(?string $version = null) : bool
+    {
+        if ($version !== null && version_compare(phpversion('gmagick'), $version) > 0) {
+            return false;
         }
 
         return false;

@@ -9,49 +9,49 @@ use LireinCore\Image\Manipulator;
 /**
  * Overlay image
  */
-class Overlay implements Effect
+final class Overlay implements Effect
 {
     use Pixel;
 
     /**
      * @var string
      */
-    protected $path;
+    private $path;
 
     /**
      * @var int
      */
-    protected $opacity;
+    private $opacity;
 
     /**
      * @var string
      */
-    protected $offsetX;
+    private $offsetX;
 
     /**
      * @var string
      */
-    protected $offsetY;
+    private $offsetY;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $width;
+    private $width;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $height;
+    private $height;
 
     /**
      * Overlay constructor.
      *
-     * @param string $path absolute path to the overlay image
-     * @param int    $opacity for example: 0-100, 0 - fully transparent | 100 - not transparent (default: 100)
-     * @param string $offset_x for example: 100 | 20% | center | left | right (default: right)
-     * @param string $offset_y for example: 100 | 20% | center | top | bottom (default: bottom)
-     * @param string $width for example: 100 | 20% - change overlay image width (% - relative to the background image) (default: original size)
-     * @param string $height for example: 100 | 20% - change overlay image height (% - relative to the background image) (default: original size)
+     * @param string      $path absolute path to the overlay image
+     * @param int         $opacity for example: 0-100, 0 - fully transparent | 100 - not transparent (default: 100)
+     * @param string      $offset_x for example: 100 | 20% | center | left | right (default: right)
+     * @param string      $offset_y for example: 100 | 20% | center | top | bottom (default: bottom)
+     * @param string|null $width for example: 100 | 20% - change overlay image width (% - relative to the background image) (default: original size)
+     * @param string|null $height for example: 100 | 20% - change overlay image height (% - relative to the background image) (default: original size)
      */
     public function __construct($path, $opacity = 100, $offset_x = 'right', $offset_y = 'bottom', $width = null, $height = null)
     {
@@ -66,7 +66,7 @@ class Overlay implements Effect
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $origWidth = $manipulator->width();
         $origHeight = $manipulator->height();

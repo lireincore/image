@@ -8,12 +8,12 @@ use LireinCore\Image\Manipulator;
 /**
  * Image grayscale
  */
-class Grayscale implements Effect
+final class Grayscale implements Effect
 {
     /**
      * @inheritdoc
      */
-    public function apply(Manipulator $manipulator)
+    public function apply(Manipulator $manipulator) : Effect
     {
         $manipulator->grayscale();
 
