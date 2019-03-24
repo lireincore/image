@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 0.3.0 (2019-02-24)
+
+  * Bug fix
+
 ### 0.3.0 (2019-02-18)
 
   * Required php version changed to 7.1.3

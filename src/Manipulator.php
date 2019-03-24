@@ -141,13 +141,13 @@ interface Manipulator
 
     /**
      * @param int $angle
-     * @param string $bgcolor
+     * @param string|array $bgcolor
      * @param int $bgtransparency
      * @return $this
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function rotate(int $angle, string $bgcolor = '#fff', int $bgtransparency = 0) : self;
+    public function rotate(int $angle, $bgcolor = '#fff', int $bgtransparency = 0) : self;
 
     /**
      * @return $this
